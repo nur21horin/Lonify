@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,20 +14,20 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const {signInuser}=useAuth();
-  const location=useLocation();
-  const navigate=useNavigate();
+  const { signInuser, signInGoogle } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    alert("Login feature requires backend");
-    setIsLoading(false);
+  const handleLogin = (data) => {
+    signInuser(data.email, data.password)
+      .then(() => {
+        navigate(location?.state || "/");
+        setIsLoading(false);
+      })
+      .catch((error) => console.log(error));
   };
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center text-black bg-gray-50 px-4">
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
@@ -53,7 +54,7 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
           {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-700">
@@ -61,11 +62,15 @@ const Login = () => {
             </label>
             <input
               type="email"
-              placeholder="you@example.com"
+              {...register("email", { require: true })}
+              placeholder="your email"
               className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
             />
           </div>
+          {errors.email?.type === "required" && (
+            <p className="text-red-500 text-sm">Email is required</p>
+          )}
 
           {/* Password */}
           <div>
@@ -84,10 +89,19 @@ const Login = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder="Password"
+                {...register("password", { required: true, minLength: 6 })}
                 className="mt-1 w-full px-4 py-2 border rounded-lg pr-16 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 required
               />
+              {errors.password?.type === "required" && (
+                <p className="text-red-500 text-sm">Password is required</p>
+              )}
+              {errors.password?.type === "minLength" && (
+                <p className="text-red-500 text-sm">
+                  Password must be at least 6 characters
+                </p>
+              )}
 
               {/* Toggle Password Button */}
               <button
