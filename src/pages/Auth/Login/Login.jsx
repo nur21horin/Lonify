@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
+import SOcialLogin from "../SocialLogin/SOcialLogin";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -134,6 +135,7 @@ const Login = () => {
             Create one
           </Link>
         </p>
+        <SOcialLogin></SOcialLogin>
       </motion.div>
     </div>
   );
