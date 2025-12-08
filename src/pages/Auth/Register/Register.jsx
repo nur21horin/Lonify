@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import SOcialLogin from "../SocialLogin/SOcialLogin";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);

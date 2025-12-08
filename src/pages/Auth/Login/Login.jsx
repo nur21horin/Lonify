@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import SOcialLogin from "../SocialLogin/SOcialLogin";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +23,7 @@ const Login = () => {
   const handleLogin = (data) => {
     signInuser(data.email, data.password)
       .then(() => {
+        toast.success("Login Successful!");
         navigate(location?.state || "/");
         setIsLoading(false);
       })
