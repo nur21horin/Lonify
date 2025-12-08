@@ -1,19 +1,54 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import SOcialLogin from "../SocialLogin/SOcialLogin";
+import useAuth from "../../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { createUser, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  //password validation rules
+  const passwordRules = {
+    required: "Password is required",
+    minLength: {
+      value: 6,
+      message: "Password must be at least 6 characters",
+    },
+    validate: {
+      hasUpper: (value) =>
+        /[A-Z]/.test(value) || "Must contain at least one uppercase letter",
+      hasLower: (value) =>
+        /[a-z]/.test(value) || "Must contain at least one lowercase letter",
+    },
+  };
+
+  const RegisterSubmit = (data) => {
     setIsLoading(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    alert("Registration requires backend. Connect your API.");
-    setIsLoading(false);
+    const fullName = `${data.firstName} ${data.lastName}`;
+    createUser(data.email, data.password)
+      .then(() => {
+        return updateUserProfile(fullName, data.photoURL);
+      })
+      .then(() => {
+        toast.success("Registration successful");
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Registration failed. Try again");
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -44,49 +79,104 @@ const Register = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-
+        <form onSubmit={handleSubmit(RegisterSubmit)} className="space-y-5">
           {/* Name Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">First Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                First Name
+              </label>
               <input
                 required
-                placeholder="John"
+                {...register("firstName", {
+                  required: "First name is required",
+                })}
+                placeholder="First Name"
                 className="mt-1 w-full px-4 py-2 border rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm">
+                  {errors.firstName.message}
+                </p>
+              )}
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700">Last Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Last Name
+              </label>
               <input
-                required
-                placeholder="Doe"
+                {...register("lastName", { required: "Last name is required" })}
+                placeholder="Last Name"
                 className="mt-1 w-full px-4 py-2 border rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm">
+                  {errors.lastName.message}
+                </p>
+              )}
             </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="text-sm font-medium text-gray-700">Email Address</label>
+            <label className="text-sm font-medium text-gray-700">
+              Email Address
+            </label>
             <input
               type="email"
-              placeholder="example@mail.com"
-              required
+              {...register("email", { required: "Email is required" })}
+              placeholder="email@mail.com"
               className="mt-1 w-full px-4 py-2 border rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Photo URL */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">
+              Photo URL
+            </label>
+            <input
+              type="url"
+              {...register("photoURL", { required: "Photo URL is required" })}
+              placeholder="https://amrPhoto.com"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+            {errors.photoURL && (
+              <p className="text-red-500 text-sm">{errors.photoURL.message}</p>
+            )}
+          </div>
+
+          {/* Role */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">Role</label>
+            <select
+              {...register("role", { required: "Role is required" })}
+              className="mt-1 w-full px-4 py-2 border rounded-lg text-black focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">Select role</option>
+              <option value="borrower">Borrower</option>
+              <option value="manager">Manager</option>
+            </select>
+            {errors.role && (
+              <p className="text-red-500 text-sm">{errors.role.message}</p>
+            )}
           </div>
 
           {/* Password */}
           <div>
-            <label className="text-sm font-medium text-gray-700">Password</label>
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
 
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                required
+                {...register("password", passwordRules)}
                 className="mt-1 w-full px-4 py-2 border rounded-lg pr-12 text-black placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
 
@@ -99,7 +189,11 @@ const Register = () => {
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           {/* Terms */}
@@ -107,9 +201,13 @@ const Register = () => {
             <input type="checkbox" required className="mt-1" />
             <label className="text-sm text-gray-700">
               I agree to the{" "}
-              <Link to="/terms" className="text-indigo-600 underline">Terms of Service</Link>{" "}
+              <Link to="/terms" className="text-indigo-600 underline">
+                Terms of Service
+              </Link>{" "}
               and{" "}
-              <Link to="/privacy" className="text-indigo-600 underline">Privacy Policy</Link>
+              <Link to="/privacy" className="text-indigo-600 underline">
+                Privacy Policy
+              </Link>
             </label>
           </div>
 
@@ -126,8 +224,12 @@ const Register = () => {
         {/* Redirect */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-indigo-600 underline font-medium">Sign in</Link>
+          <Link to="/login" className="text-indigo-600 underline font-medium">
+            Sign in
+          </Link>
         </p>
+        {/* Social Login */}
+        <SOcialLogin></SOcialLogin>
       </motion.div>
     </div>
   );
