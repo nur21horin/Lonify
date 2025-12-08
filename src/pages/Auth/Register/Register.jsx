@@ -44,9 +44,14 @@ const Register = () => {
         toast.success("Registration successful");
         navigate("/login");
       })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Registration failed. Try again");
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          toast.error("Email already registered!");
+        } else if (error.code === "auth/weak-password") {
+          toast.error("Password is too weak!");
+        } else {
+          toast.error(error.message);
+        }
       })
       .finally(() => setIsLoading(false));
   };
@@ -143,7 +148,7 @@ const Register = () => {
               type="url"
               {...register("photoURL", { required: "Photo URL is required" })}
               placeholder="https://amrPhoto.com"
-              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full px-4 py-2 border rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
             {errors.photoURL && (
               <p className="text-red-500 text-sm">{errors.photoURL.message}</p>
