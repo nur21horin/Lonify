@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "title": "Personal Loan",
+    "description": "Flexible personal loans for all your needs",
+    "longDescription": "Our personal loan is designed to provide you with the financial flexibility you need. Whether you're planning a vacation, consolidating debt, or covering unexpected expenses, our personal loan offers competitive rates and flexible repayment options tailored to your needs.",
+    "image": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=500&fit=crop",
+    "category": "Personal",
+    "interestRate": "8.5%",
+    "maxLimit": "$50,000",
+    "minLimit": "$1,000",
+    "tenure": "12 - 60 months",
+    "emiPlans": ["12 months", "24 months", "36 months", "48 months", "60 months"],
+    "requirements": ["Valid ID", "Proof of Income", "Bank Statements", "Address Proof"],
+    "benefits": ["No collateral required", "Quick approval", "Flexible EMI options", "No hidden charges"]
+  },
+  {
+    "id": "2",
+    "title": "Home Loan",
+    "description": "Make your dream home a reality",
+    "longDescription": "Transform your dream of owning a home into reality with our comprehensive home loan solutions. We offer competitive interest rates, flexible tenure options, and a hassle-free application process to help you step into your new home sooner.",
+    "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop",
+    "category": "Home",
+    "interestRate": "6.9%",
+    "maxLimit": "$500,000",
+    "minLimit": "$50,000",
+    "tenure": "5 - 30 years",
+    "emiPlans": ["5 years", "10 years", "15 years", "20 years", "25 years", "30 years"],
+    "requirements": ["Valid ID", "Proof of Income", "Property Documents", "Bank Statements"],
+    "benefits": ["Low interest rates", "Long tenure options", "Tax benefits", "Top-up loan facility"]
+  },
+  {
+    "id": "3",
+    "title": "Business Loan",
+    "description": "Fuel your business growth",
+    "longDescription": "Take your business to new heights with our business loan solutions. Whether you need working capital, equipment financing, or funds for expansion, we provide quick and flexible financing options to support your business goals.",
+    "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop",
+    "category": "Business",
+    "interestRate": "9.5%",
+    "maxLimit": "$250,000",
+    "minLimit": "$10,000",
+    "tenure": "12 - 84 months",
+    "emiPlans": ["12 months", "24 months", "36 months", "48 months", "60 months", "84 months"],
+    "requirements": ["Business Registration", "Financial Statements", "Bank Statements", "Business Plan"],
+    "benefits": ["No collateral for small loans", "Quick disbursement", "Flexible repayment", "Business growth support"]
+  }
+]
