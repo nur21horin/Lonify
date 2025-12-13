@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import Rootlayout from "../layout/Rootlayout";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login/Login";
@@ -7,8 +6,10 @@ import Register from "../pages/Auth/Register/Register";
 import PrivateRoute from "../layout/PrivateLayout";
 import AllLoans from "../pages/AllLoans/AllLoans";
 import LoanDetails from "../pages/LoanDetails/LoanDetails";
-
 import loanData from "../Api/LoanDetails.json";
+import DashboardLayout from "../pages/Dashboard/DashboardLayout";
+import ErrorPage from "../pages/ErrorPage";
+import Profile from "../pages/Dashboard/Profile";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -46,8 +47,21 @@ export const router = createBrowserRouter([
         ),
         loader: loanDetailsLoader,
       },
+      {
+        path:"profile",
+        Component:Profile
+      }
     ],
   },
   { path: "login", Component: Login },
   { path: "register", Component: Register },
+  {
+    path:"dashboard",
+    element:<PrivateRoute>
+      <DashboardLayout></DashboardLayout>
+    </PrivateRoute>,
+    
+  },{
+    path:"*",Component:ErrorPage
+  }
 ]);
