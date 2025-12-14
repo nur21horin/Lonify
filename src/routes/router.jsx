@@ -18,6 +18,9 @@ import ManageLoans from "../pages/Dashboard/ManagerDashBoard/ManageLoan";
 import PendingApplications from "../pages/Dashboard/ManagerDashBoard/PendingLoan";
 import ApprovedApplications from "../pages/Dashboard/ManagerDashBoard/ApprovedLoanApplication";
 import UpdateLoan from "../pages/Dashboard/ManagerDashBoard/UpdateLoan";
+import ManageUsers from "../pages/Dashboard/AdminDashboard/ManageUsers";
+import AllLoansAdmin from "../pages/Dashboard/AdminDashboard/AllLoansAdmin";
+import LoanApplicationsAdmin from "../pages/Dashboard/AdminDashboard/LoanApplication";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -65,13 +68,13 @@ export const router = createBrowserRouter([
         ),
         children: [
           {
-            path:'myLoans',
-            Component:MyLoans
-          },{
-            path:'apply-loan/:id',
-            Component:LoanApplicationForm,
-            loader:loanDetailsLoader
-
+            path: "myLoans",
+            Component: MyLoans,
+          },
+          {
+            path: "apply-loan/:id",
+            Component: LoanApplicationForm,
+            loader: loanDetailsLoader,
           },
           {
             path: "profile",
@@ -79,21 +82,35 @@ export const router = createBrowserRouter([
           },
           //Manager
           {
-            path:"addLoan",
-            Component:AddLoan
+            path: "addLoan",
+            Component: AddLoan,
+          },
+          {
+            path: "manageLoan",
+            Component: ManageLoans,
+          },
+          {
+            path: "updateLoan/:id",
+            Component: UpdateLoan,
+          },
+          {
+            path: "pendingApplication",
+            Component: PendingApplications,
+          },
+          {
+            path: "approvedLoans",
+            Component: ApprovedApplications,
+          },
+          {
+            path: "manageUsers",
+            Component:ManageUsers,
           },{
-            path:"manageLoan",
-            Component:ManageLoans
+            path:"allLoans",
+            Component:AllLoansAdmin
           },{
-            path:"updateLoan/:id",
-            Component: UpdateLoan
-          },{
-            path:"pendingApplication",
-            Component:PendingApplications
-          },{
-            path:"approvedLoans",
-            Component:ApprovedApplications
-          }
+            path:"loansAppLication",
+            Component:LoanApplicationsAdmin
+          },
         ],
       },
     ],
