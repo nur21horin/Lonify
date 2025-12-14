@@ -1,45 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useLoaderData, useNavigate } from "react-router-dom"; // Import useLoaderData
 import axios from "axios";
+// import { toast } from 'react-toastify'; 
 
-import { toast } from 'react-toastify'; 
-import useAuth from "../../../hooks/useAuth";
-
-const AddLoan = () => {
-    const { user } = useAuth();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+const UpdateLoan = () => {
+    // 1. Fetch existing loan data from the router loader
+    // The loanDetailsLoader (or a dedicated loanUpdateLoader) should be used here.
+    const loanToUpdate = useLoaderData(); 
+    
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+
+    const { 
+        register, 
+        handleSubmit, 
+        reset, 
+        formState: { errors } 
+    } = useForm({
+        // Set default values based on the loaded data for pre-filling the form
+        defaultValues: {
+            title: loanToUpdate.title || '',
+            description: loanToUpdate.description || '',
+            category: loanToUpdate.category || '',
+            interestRate: loanToUpdate.interestRate || 0,
+            minLimit: loanToUpdate.minLimit || 0,
+            maxLimit: loanToUpdate.maxLimit || 0,
+            // Convert array of numbers back to a comma-separated string for the input field
+            availableEmiPlans: Array.isArray(loanToUpdate.availableEmiPlans) 
+                                ? loanToUpdate.availableEmiPlans.join(', ') 
+                                : '',
+            requiredDocuments: loanToUpdate.requiredDocuments || '',
+            image: loanToUpdate.image || '',
+            showOnHome: loanToUpdate.showOnHome || false,
+        }
+    });
 
     const onSubmit = async (data) => {
         setIsLoading(true);
-        // Clean and prepare data for the Mongoose Loan Schema
-        const loanData = {
+        const loanId = loanToUpdate._id; // Use the MongoDB ID
+
+        // Clean and prepare data, similar to AddLoan
+        const updatedLoanData = {
             ...data,
             interestRate: parseFloat(data.interestRate),
             minLimit: parseFloat(data.minLimit),
             maxLimit: parseFloat(data.maxLimit),
-            // Assuming EMI Plans are comma-separated and need conversion
+            // Convert the comma-separated string back to an array of numbers
             availableEmiPlans: data.availableEmiPlans.split(',').map(p => parseInt(p.trim())).filter(n => !isNaN(n)),
-            
-            // Manager/Creator info (linked to Mongoose Loan Schema)
-            createdBy: user.uid, // Assuming uid is stored in Mongoose User schema
-            createdByEmail: user.email,
-            
-            // Set showOnHome default/toggle
-            showOnHome: data.showOnHome || false, 
-            // NOTE: Image Upload logic should handle data.images and upload to cloud storage
         };
 
         try {
+            // 2. Perform PUT request to update the existing loan
             // NOTE: Ensure this endpoint is Manager-protected on the backend
-            await axios.post('http://localhost:5000/api/loans', loanData);
-            // toast.success("New Loan Product Added Successfully!");
-            alert("New Loan Product Added Successfully!"); // Placeholder alert
-            reset();
+            await axios.put(`http://localhost:5000/api/loans/${loanId}`, updatedLoanData);
+            
+            // toast.success("Loan Product Updated Successfully!");
+            alert("Loan Product Updated Successfully!"); // Placeholder alert
+            
+            // Redirect back to the Manage Loans page
+            navigate("/dashboard/manage-loans"); 
+
         } catch (error) {
-            console.error("Error adding loan:", error);
-            // toast.error("Failed to add loan product.");
-            alert("Failed to add loan product."); // Placeholder alert
+            console.error("Error updating loan:", error);
+            // toast.error("Failed to update loan product.");
+            alert("Failed to update loan product."); // Placeholder alert
         } finally {
             setIsLoading(false);
         }
@@ -47,7 +72,7 @@ const AddLoan = () => {
 
     return (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-            <h1 className="text-3xl font-bold mb-8 text-gray-900">Add New Loan Product</h1>
+            <h1 className="text-3xl font-bold mb-8 text-gray-900">Update Loan Product: {loanToUpdate.title}</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
                 {/* Title and Category */}
@@ -126,13 +151,13 @@ const AddLoan = () => {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
                 >
-                    {isLoading ? 'Adding Loan...' : 'Add Loan Product'}
+                    {isLoading ? 'Saving Changes...' : 'Update Loan Product'}
                 </button>
             </form>
         </div>
     );
 };
 
-export default AddLoan;
+export default UpdateLoan;

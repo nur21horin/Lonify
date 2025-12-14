@@ -32,7 +32,7 @@ export default function DashboardLayout() {
           )}
 
           {user?.role === "borrower" && (
-            <Link to="/dashboard/my-loans" className="hover:bg-gray-700 p-2 rounded">My Loans</Link>
+            <Link to="/dashboard/myLoans" className="hover:bg-gray-700 p-2 rounded">My Loans</Link>
           )}
         </nav>
       </aside>

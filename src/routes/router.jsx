@@ -13,6 +13,11 @@ import Profile from "../pages/Dashboard/Profile";
 
 import MyLoans from "../pages/Dashboard/UserDashBoard/MyLoans";
 import LoanApplicationForm from "../pages/Dashboard/UserDashBoard/LoanApplicationForm";
+import AddLoan from "../pages/Dashboard/ManagerDashBoard/AddLoan";
+import ManageLoans from "../pages/Dashboard/ManagerDashBoard/ManageLoan";
+import PendingApplications from "../pages/Dashboard/ManagerDashBoard/PendingLoan";
+import ApprovedApplications from "../pages/Dashboard/ManagerDashBoard/ApprovedLoanApplication";
+import UpdateLoan from "../pages/Dashboard/ManagerDashBoard/UpdateLoan";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -72,6 +77,23 @@ export const router = createBrowserRouter([
             path: "profile",
             element: <Profile />,
           },
+          //Manager
+          {
+            path:"addLoan",
+            Component:AddLoan
+          },{
+            path:"manageLoan",
+            Component:ManageLoans
+          },{
+            path:"updateLoan/:id",
+            Component: UpdateLoan
+          },{
+            path:"pendingApplication",
+            Component:PendingApplications
+          },{
+            path:"approvedLoans",
+            Component:ApprovedApplications
+          }
         ],
       },
     ],
