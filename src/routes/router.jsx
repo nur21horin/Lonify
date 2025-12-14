@@ -10,6 +10,7 @@ import loanData from "../Api/LoanDetails.json";
 import DashboardLayout from "../pages/Dashboard/DashboardLayout";
 import ErrorPage from "../pages/ErrorPage";
 import Profile from "../pages/Dashboard/Profile";
+import LoanApplicationForm from "../pages/Dashboard/AdminDashboard/LoanApplication";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -48,20 +49,32 @@ export const router = createBrowserRouter([
         loader: loanDetailsLoader,
       },
       {
-        path:"profile",
-        Component:Profile
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "dashboard",
+        element: (
+          <PrivateRoute>
+            <DashboardLayout></DashboardLayout>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path:"loanapplicationform",
+        Component:LoanApplicationForm
       }
     ],
   },
   { path: "login", Component: Login },
   { path: "register", Component: Register },
+
   {
-    path:"dashboard",
-    element:<PrivateRoute>
-      <DashboardLayout></DashboardLayout>
-    </PrivateRoute>,
-    
-  },{
-    path:"*",Component:ErrorPage
-  }
+    path: "*",
+    Component: ErrorPage,
+  },
 ]);

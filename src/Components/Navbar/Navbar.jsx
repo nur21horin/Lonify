@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
-const navigate=useN
+
 const navLinksBeforeLogin = [
   { name: "Home", href: "/" },
   { name: "All Loans", href: "/loans" },
@@ -20,6 +20,7 @@ const navLinksAfterLogin = [
 ];
 
 export function Navbar() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
@@ -105,7 +106,8 @@ export function Navbar() {
                   src={user.photoURL || "https://via.placeholder.com/32"}
                   alt="User Avatar"
                   className="h-8 w-8 rounded-full border-2 border-blue-600"
-                  onClick={()=>Navigate("/profile")}
+                   onClick={() => navigate("/profile")}
+                   style={{ cursor: "pointer" }}
                 />
                 <button
                   onClick={handleLogout}

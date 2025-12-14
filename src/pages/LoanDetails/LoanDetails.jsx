@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Calendar,
@@ -12,6 +12,7 @@ import useAuth from "../../hooks/useAuth";
 
 const LoanDetails = () => {
   const loan = useLoaderData();
+  const navigate=useNavigate();
   const { user, role } = useAuth(); // role = "user" | "admin" | "manager"
 
   const isApplyDisabled = !user || role === "admin" || role === "manager";
@@ -93,7 +94,7 @@ const LoanDetails = () => {
             <div className="mt-8">
               <button
                 disabled={isApplyDisabled}
-                onClick={() => (window.location.href = `/apply/${loan.id}`)}
+                onClick={() => navigate(`/dashboard/apply-loan/${loan._id}`)}
                 className={`w-full py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2 transition
                 ${
                   isApplyDisabled
@@ -118,7 +119,8 @@ const LoanDetails = () => {
           {/* EMI Plans */}
           <div className="bg-gray-50 rounded-xl p-6 shadow">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Calendar className="h-5 w-5 text-blue-600" />  <h2 className=" text-blue-900">  EMI Plans</h2>
+              <Calendar className="h-5 w-5 text-blue-600" />{" "}
+              <h2 className=" text-blue-900"> EMI Plans</h2>
             </h3>
             <ul className="mt-4 space-y-2">
               {loan.emiPlans.map((plan) => (
