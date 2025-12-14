@@ -21,6 +21,9 @@ import UpdateLoan from "../pages/Dashboard/ManagerDashBoard/UpdateLoan";
 import ManageUsers from "../pages/Dashboard/AdminDashboard/ManageUsers";
 import AllLoansAdmin from "../pages/Dashboard/AdminDashboard/AllLoansAdmin";
 import LoanApplicationsAdmin from "../pages/Dashboard/AdminDashboard/LoanApplication";
+import LoanPayment from "../pages/Dashboard/UserDashBoard/LoanPayemnt";
+import FeatureLoans from "../pages/AllLoans/FeatureLoans";
+import RoleRoute from "../Context/RoleRoute";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -50,6 +53,15 @@ export const router = createBrowserRouter([
         loader: allLoanLoader, // ensure loader returns the array
       },
       {
+        path: "featureLoans",
+        Component: (
+          <PrivateRoute>
+            <FeatureLoans></FeatureLoans>
+          </PrivateRoute>
+        ),
+        loader: allLoanLoader,
+      },
+      {
         path: "loans/:id",
         element: (
           <PrivateRoute>
@@ -69,7 +81,20 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "myLoans",
-            Component: MyLoans,
+            //Component: MyLoans,
+            element: (
+              <RoleRoute allowedRoles={["user", "admin", "borrower"]}>
+                <MyLoans></MyLoans>
+              </RoleRoute>
+            ),
+          },
+          {
+            path: "pay-fee/:id",
+            element: (
+              <RoleRoute allowedRoles={["user", "admin", "borrower"]}>
+                <LoanPayment></LoanPayment>
+              </RoleRoute>
+            ),
           },
           {
             path: "apply-loan/:id",
@@ -83,11 +108,19 @@ export const router = createBrowserRouter([
           //Manager
           {
             path: "addLoan",
-            Component: AddLoan,
+            element: (
+              <RoleRoute allowedRoles={["manager"]}>
+                <AddLoan />
+              </RoleRoute>
+            ),
           },
           {
             path: "manageLoan",
-            Component: ManageLoans,
+            element: (
+              <RoleRoute allowedRoles={["manager"]}>
+                <ManageLoans />
+              </RoleRoute>
+            ),
           },
           {
             path: "updateLoan/:id",
@@ -103,13 +136,27 @@ export const router = createBrowserRouter([
           },
           {
             path: "manageUsers",
-            Component:ManageUsers,
-          },{
-            path:"allLoans",
-            Component:AllLoansAdmin
-          },{
-            path:"loansAppLication",
-            Component:LoanApplicationsAdmin
+            element: (
+              <RoleRoute allowedRoles={["admin"]}>
+                <ManageUsers />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: "allLoans",
+            element: (
+              <RoleRoute allowedRoles={["admin"]}>
+                <AllLoansAdmin />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: "loansAppLication",
+            element: (
+              <RoleRoute allowedRoles={["admin"]}>
+                <LoanApplicationsAdmin />
+              </RoleRoute>
+            ),
           },
         ],
       },

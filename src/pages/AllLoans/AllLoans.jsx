@@ -3,7 +3,7 @@ import { Link, useLoaderData } from "react-router-dom";
 import { Search, Filter, TrendingUp, ArrowRight } from "lucide-react";
 
 export default function AllLoans() {
-  const loanData = useLoaderData() || []; // fallback to empty array
+  const loanData = useLoaderData() || []; 
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
