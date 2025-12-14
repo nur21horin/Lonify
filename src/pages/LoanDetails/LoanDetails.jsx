@@ -12,7 +12,7 @@ import useAuth from "../../hooks/useAuth";
 
 const LoanDetails = () => {
   const loan = useLoaderData();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { user, role } = useAuth(); // role = "user" | "admin" | "manager"
 
   const isApplyDisabled = !user || role === "admin" || role === "manager";
@@ -94,7 +94,7 @@ const LoanDetails = () => {
             <div className="mt-8">
               <button
                 disabled={isApplyDisabled}
-                onClick={() => navigate(`/dashboard/apply-loan/${loan._id}`)}
+                onClick={() => navigate(`/dashboard/apply-loan/${loan.id}`)}
                 className={`w-full py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2 transition
                 ${
                   isApplyDisabled
