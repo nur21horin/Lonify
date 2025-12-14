@@ -106,7 +106,7 @@ export function Navbar() {
                   src={user.photoURL || "https://via.placeholder.com/32"}
                   alt="User Avatar"
                   className="h-8 w-8 rounded-full border-2 border-blue-600"
-                   onClick={() => navigate("/profile")}
+                   onClick={() => navigate("/dashboard/profile")}
                    style={{ cursor: "pointer" }}
                 />
                 <button
