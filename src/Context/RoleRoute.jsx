@@ -4,13 +4,15 @@ import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const RoleRoute = ({ allowedRoles, children }) => {
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>; // spinner while checking
+  if (loading) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
+  if (!user) return <Navigate to="/login" replace />;
 
-  if (!user) return <Navigate to="/login" replace />; // not logged in
-
-  if (!allowedRoles.includes(user.role)) return <Navigate to="/dashboard" replace />; // role not allowed
+  if (!allowedRoles.includes(role))
+    return <Navigate to="/dashboard" replace />; // role not allowed
 
   return children;
 };

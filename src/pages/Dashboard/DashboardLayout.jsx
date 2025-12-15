@@ -22,12 +22,12 @@ export default function DashboardLayout() {
           {/* Borrower */}
           {user?.role === "borrower" && (
             <>
-              <NavLink to="/dashboard/myLoans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+              <NavLink to="/dashboard/my-loans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                 My Loans
               </NavLink>
-              <NavLink to="/dashboard/apply-loan" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+              {/* <NavLink to="/apply-loan/:id" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                 Apply Loan
-              </NavLink>
+              </NavLink> */}
             </>
           )}
 
@@ -66,7 +66,6 @@ export default function DashboardLayout() {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-100">
         <Outlet />
       </main>
