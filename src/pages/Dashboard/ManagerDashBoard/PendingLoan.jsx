@@ -182,6 +182,29 @@ const PendingLoans = () => {
                     <button
                       className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50 transition"
                       title="View Full Application Details"
+                      onClick={() => {
+                        Swal.fire({
+                          title: `Application Details`,
+                          html: `
+        <p><strong>Borrower:</strong> ${app.userEmail}</p>
+        <p><strong>Loan:</strong> ${app.loanTitle}</p>
+        <p><strong>Interest Rate:</strong> ${app.interestRate}%</p>
+        <p><strong>Amount:</strong> $${
+          app.loanAmount?.toLocaleString() || "N/A"
+        }</p>
+        <p><strong>Status:</strong> ${app.status}</p>
+        <p><strong>Date Applied:</strong> ${new Date(
+          app.createdAt
+        ).toLocaleString()}</p>
+        <p><strong>Description:</strong> ${app.description || "N/A"}</p>
+      `,
+                          icon: "info",
+                          showCloseButton: true,
+                          focusConfirm: false,
+                          confirmButtonText: "Close",
+                          width: 500,
+                        });
+                      }}
                     >
                       <Eye className="h-5 w-5" />
                     </button>

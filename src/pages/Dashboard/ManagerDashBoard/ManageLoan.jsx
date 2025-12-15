@@ -1,120 +1,198 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Edit3, Trash2, Loader2, Search } from "lucide-react";
 import axios from "axios";
-
-import { Edit3, Trash2, Search, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
-
+import { toast } from "react-toastify";
 
 const ManageLoans = () => {
-    const { user } = useAuth();
-    const navigate = useNavigate();
-    const [loans, setLoans] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
+  const { firebaseUser } = useAuth();
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
-    // Fetch loans created by the current manager
-    useEffect(() => {
-        const fetchLoans = async () => {
-            if (!user?.email) return;
-
-            try {
-                setLoading(true);
-                // NOTE: Backend needs an endpoint to fetch loans filtered by 'createdByEmail'
-                const response = await axios.get(`http://localhost:5000/api/loans/manager/${user.email}`);
-                setLoans(response.data);
-            } catch (error) {
-                console.error("Error fetching manager loans:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchLoans();
-    }, [user]);
-
-    // Delete Loan
-    const handleDelete = async (loanId) => {
-        const confirmation = window.confirm("Are you sure you want to permanently delete this loan?");
-        if (confirmation) {
-            try {
-                await axios.delete(`http://localhost:5000/api/loans/${loanId}`);
-                setLoans(prevLoans => prevLoans.filter(loan => loan._id !== loanId));
-                // toast.success("Loan deleted.");
-            } catch (error) {
-                // toast.error("Failed to delete loan.");
-            }
-        }
+  // Fetch loans
+  useEffect(() => {
+    const fetchLoans = async () => {
+      if (!firebaseUser) return;
+      setLoading(true);
+      try {
+        const token = await firebaseUser.getIdToken();
+        const res = await axios.get("http://localhost:5000/loans", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setLoans(res.data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to fetch loans");
+      } finally {
+        setLoading(false);
+      }
     };
+    fetchLoans();
+  }, [firebaseUser]);
 
-    // Update Loan (Redirect to an edit page)
-    const handleUpdate = (loanId) => {
-        navigate(`/dashboard/update-loan/${loanId}`);
-    };
+  // Delete loan
+  const handleDelete = async (loanId) => {
+    if (!firebaseUser) return;
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete the loan!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
 
-    // Filter logic (Client-side filtering by title or category)
-    const filteredLoans = loans.filter(loan => 
-        loan.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        loan.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    if (confirm.isConfirmed) {
+      try {
+        const token = await firebaseUser.getIdToken();
+        await axios.delete(`http://localhost:5000/loans/${loanId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setLoans((prev) => prev.filter((loan) => loan._id !== loanId));
+        Swal.fire("Deleted!", "Loan has been deleted.", "success");
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error!", "Failed to delete loan.", "error");
+      }
+    }
+  };
 
-    if (loading) return <div className="text-center p-10"><Loader2 className="animate-spin h-6 w-6 inline" /> Loading Loans...</div>;
+  // Update loan via SweetAlert modal
+  const handleUpdate = async (loan) => {
+  const { value: formValues } = await Swal.fire({
+    title: "Update Loan",
+    html:
+      `<input id="swal-title" class="swal2-input" placeholder="Title" value="${loan.title}">` +
+      `<input id="swal-category" class="swal2-input" placeholder="Category" value="${loan.category}">` +
+      `<input id="swal-interest" type="number" class="swal2-input" placeholder="Interest Rate" value="${loan.interestRate}">` +
+      `<input id="swal-minLimit" type="number" class="swal2-input" placeholder="Min Limit" value="${loan.minLimit || ''}">` +
+      `<input id="swal-maxLimit" type="number" class="swal2-input" placeholder="Max Limit" value="${loan.maxLimit || ''}">` +
+      `<textarea id="swal-description" class="swal2-textarea" placeholder="Description">${loan.description || ''}</textarea>` +
+      `<div style="display:flex; align-items:center; margin-top:10px; gap:5px;">` +
+      `<input id="swal-showOnHome" type="checkbox" ${loan.showOnHome ? "checked" : ""} />` +
+      `<label for="swal-showOnHome">Show on Home</label>` +
+      `</div>`,
+    focusConfirm: false,
+    showCancelButton: true,
+    preConfirm: () => {
+      return {
+        title: document.getElementById("swal-title").value,
+        category: document.getElementById("swal-category").value,
+        interestRate: parseFloat(document.getElementById("swal-interest").value),
+        minLimit: parseFloat(document.getElementById("swal-minLimit").value),
+        maxLimit: parseFloat(document.getElementById("swal-maxLimit").value),
+        description: document.getElementById("swal-description").value,
+        showOnHome: document.getElementById("swal-showOnHome").checked,
+      };
+    },
+  });
 
+  if (formValues) {
+    try {
+      const token = await firebaseUser.getIdToken();
+      await axios.patch(`http://localhost:5000/loans/${loan._id}`, formValues, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLoans((prev) =>
+        prev.map((l) => (l._id === loan._id ? { ...l, ...formValues } : l))
+      );
+      toast.success("Loan updated successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update loan");
+    }
+  }
+};
+
+  // Filter loans
+  const filteredLoans = loans.filter(
+    (loan) =>
+      loan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      loan.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
     return (
-        <div className="p-6 bg-white rounded-xl shadow-lg">
-            <h1 className="text-2xl font-bold mb-6">Manage Your Loan Products</h1>
-            
-            {/* Search/Filter Bar */}
-            <div className="mb-6 flex items-center border border-gray-300 rounded-lg overflow-hidden max-w-sm">
-                <Search className="h-5 w-5 ml-3 text-gray-400" />
-                <input
-                    type="text"
-                    placeholder="Search by Title or Category..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1 px-4 py-2 focus:ring-0 focus:outline-none"
-                />
-            </div>
-            
-            {/* Loans Table */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Interest</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredLoans.length > 0 ? (
-                            filteredLoans.map((loan) => (
-                                <tr key={loan._id}>
-                                    <td className="px-6 py-4"><img src={loan.image} alt={loan.title} className="w-10 h-10 object-cover rounded" /></td>
-                                    <td className="px-6 py-4 text-sm font-medium">{loan.title}</td>
-                                    <td className="px-6 py-4 text-sm">{loan.interestRate}%</td>
-                                    <td className="px-6 py-4 text-sm">{loan.category}</td>
-                                    <td className="px-6 py-4 text-center text-sm font-medium">
-                                        <div className="flex justify-center gap-2">
-                                            <button onClick={() => handleUpdate(loan._id)} className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50" title="Edit Loan">
-                                                <Edit3 className="h-5 w-5" />
-                                            </button>
-                                            <button onClick={() => handleDelete(loan._id)} className="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-50" title="Delete Loan">
-                                                <Trash2 className="h-5 w-5" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr><td colSpan="5" className="px-6 py-4 text-center text-gray-500">No loans found or created by you.</td></tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <div className="flex justify-center items-center h-screen text-black">
+        <Loader2 className="animate-spin h-6 w-6 mr-2" /> Loading loans...
+      </div>
     );
+  }
+
+  return (
+    <div className="p-6 max-w-5xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="p-6 rounded-xl bg-black text-white text-3xl font-bold shadow-md">
+        Manage Your Loan Products
+      </div>
+
+      {/* Search */}
+      <div className="flex items-center mb-6 max-w-md border border-gray-300 rounded-lg overflow-hidden">
+        <Search className="h-5 w-5 ml-3 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search by Title or Category..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="flex-1 px-4 py-2 bg-white text-black focus:outline-none"
+        />
+      </div>
+
+      {filteredLoans.length === 0 ? (
+        <p className="text-black">No loans found.</p>
+      ) : (
+        <AnimatePresence>
+          {filteredLoans.map((loan) => (
+            <motion.div
+              key={loan._id}
+              layout
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-white text-black border border-gray-200 rounded-xl p-6 shadow-md space-y-3"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="font-medium">Title: {loan.title}</p>
+                </div>
+                <div>
+                  <p className="font-medium">Category: {loan.category}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <p>Interest Rate: {loan.interestRate}%</p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={loan.showOnHome}
+                    readOnly
+                  />
+                  <span>Show on Home</span>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 mt-3">
+                <button
+                  onClick={() => handleUpdate(loan)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                >
+                  <Edit3 size={16} /> Update
+                </button>
+                <button
+                  onClick={() => handleDelete(loan._id)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                >
+                  <Trash2 size={16} /> Delete
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      )}
+    </div>
+  );
 };
 
 export default ManageLoans;
