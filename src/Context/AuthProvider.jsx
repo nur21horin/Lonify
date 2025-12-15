@@ -11,14 +11,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../Firebase/Firebase.init";
-
+import axios from "axios";
 
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const [firebaseUser, setFirebaseUser] = useState(null);
   const registerUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
@@ -47,9 +47,26 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, profile);
   };
 
+  const fetchUserRole = async (email) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/users/${email}/role`);
+      return res.data.role || "user";
+    } catch (err) {
+      console.error("Failed to fetch role:", err);
+      return "user"; 
+    }
+  };
+
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+       setFirebaseUser(currentUser);
+        const role = await fetchUserRole(currentUser.email);
+        setUser({ ...currentUser, role });
+      } else {
+        setFirebaseUser(null);
+        setUser(null);
+      }
       setLoading(false);
     });
     return () => unSubscribe();
@@ -58,7 +75,8 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     loading,
     user,
-    createUser:registerUser,
+    firebaseUser,
+    createUser: registerUser,
     signInuser,
     signInGoogle,
     logOut,
@@ -67,9 +85,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 

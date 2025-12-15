@@ -24,6 +24,7 @@ import LoanApplicationsAdmin from "../pages/Dashboard/AdminDashboard/LoanApplica
 import LoanPayment from "../pages/Dashboard/UserDashBoard/LoanPayemnt";
 import FeatureLoans from "../pages/AllLoans/FeatureLoans";
 import RoleRoute from "../Context/RoleRoute";
+import PendingLoans from "../pages/Dashboard/ManagerDashBoard/PendingLoan";
 
 // Loader for all loans
 const allLoanLoader = async () => {
@@ -80,7 +81,7 @@ export const router = createBrowserRouter([
         ),
         children: [
           {
-            path: "myLoans",
+            path: "my-loans",
             //Component: MyLoans,
             element: (
               <RoleRoute allowedRoles={["user", "admin", "borrower"]}>
@@ -121,6 +122,9 @@ export const router = createBrowserRouter([
                 <ManageLoans />
               </RoleRoute>
             ),
+          },{
+            path:"pending-loans",
+            element:<RoleRoute allowedRoles={["manager"]}><PendingLoans></PendingLoans></RoleRoute>
           },
           {
             path: "updateLoan/:id",

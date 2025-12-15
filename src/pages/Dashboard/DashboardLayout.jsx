@@ -1,10 +1,11 @@
-// pages/Dashboard/DashboardLayout.jsx
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-
 
 export default function DashboardLayout() {
   const { user } = useAuth();
+
+  const activeClass = "bg-gray-700 p-2 rounded";
+  const inactiveClass = "hover:bg-gray-700 p-2 rounded";
 
   return (
     <div className="flex min-h-screen">
@@ -13,26 +14,54 @@ export default function DashboardLayout() {
         <h2 className="text-xl font-bold mb-6">Dashboard</h2>
 
         <nav className="flex flex-col gap-2">
-          <Link to="/dashboard/profile" className="hover:bg-gray-700 p-2 rounded">My Profile</Link>
+          {/* Common for all users */}
+          <NavLink to="/dashboard/profile" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+            My Profile
+          </NavLink>
 
-          {user?.role === "admin" && (
+          {/* Borrower */}
+          {user?.role === "borrower" && (
             <>
-              <Link to="/dashboard/admin/manage-users" className="hover:bg-gray-700 p-2 rounded">Manage Users</Link>
-              <Link to="/dashboard/admin/all-loans" className="hover:bg-gray-700 p-2 rounded">All Loans</Link>
-              <Link to="/dashboard/admin/loan-applications" className="hover:bg-gray-700 p-2 rounded">Loan Applications</Link>
+              <NavLink to="/dashboard/myLoans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                My Loans
+              </NavLink>
+              <NavLink to="/dashboard/apply-loan" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Apply Loan
+              </NavLink>
             </>
           )}
 
+          {/* Manager */}
           {user?.role === "manager" && (
             <>
-              <Link to="/dashboard/manager/add-loan" className="hover:bg-gray-700 p-2 rounded">Add Loan</Link>
-              <Link to="/dashboard/manager/manage-loans" className="hover:bg-gray-700 p-2 rounded">Manage Loans</Link>
-              <Link to="/dashboard/manager/pending-loans" className="hover:bg-gray-700 p-2 rounded">Pending Loans</Link>
+              <NavLink to="/dashboard/addLoan" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Add Loan
+              </NavLink>
+              <NavLink to="/dashboard/manageLoan" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Manage Loans
+              </NavLink>
+              <NavLink to="/dashboard/pendingApplication" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Pending Applications
+              </NavLink>
+              <NavLink to="/dashboard/approvedLoans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Approved Applications
+              </NavLink>
             </>
           )}
 
-          {user?.role === "borrower" && (
-            <Link to="/dashboard/myLoans" className="hover:bg-gray-700 p-2 rounded">My Loans</Link>
+          {/* Admin */}
+          {user?.role === "admin" && (
+            <>
+              <NavLink to="/dashboard/manageUsers" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Manage Users
+              </NavLink>
+              <NavLink to="/dashboard/allLoans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                All Loans
+              </NavLink>
+              <NavLink to="/dashboard/loansAppLication" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
+                Loan Applications
+              </NavLink>
+            </>
           )}
         </nav>
       </aside>
