@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Confetti from "react-confetti";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -14,6 +15,17 @@ const AddLoan = () => {
     formState: { errors },
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  // Update window size for confetti
+  useEffect(() => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    const handleResize = () =>
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -40,8 +52,13 @@ const AddLoan = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       toast.success("New Loan Product Added Successfully!");
       reset();
+
+      // Trigger confetti for 5 seconds
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 5000);
     } catch (error) {
       console.error("Error adding loan:", error);
       toast.error("Failed to add loan product.");
@@ -51,7 +68,12 @@ const AddLoan = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 relative">
+      {/* Confetti */}
+      {showConfetti && (
+        <Confetti width={windowSize.width} height={windowSize.height} />
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
@@ -225,9 +247,7 @@ const AddLoan = () => {
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
             />
             {errors.image && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.image.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1">{errors.image.message}</p>
             )}
           </div>
 
