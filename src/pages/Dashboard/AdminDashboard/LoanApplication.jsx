@@ -147,7 +147,7 @@ const LoanApplicationsAdmin = () => {
         </tbody>
       </table>
     </div>
-  );
+  );//Nur
 };
 
 export default LoanApplicationsAdmin;
