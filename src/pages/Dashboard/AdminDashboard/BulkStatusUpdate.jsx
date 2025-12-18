@@ -13,7 +13,7 @@ const BulkStatusUpdate = ({ selectedApps, onBulkUpdate }) => {
       showCancelButton: true,
       confirmButtonText: "Confirm",
     });
-// NUR
+// NUR Mohammod
     if (res.isConfirmed) {
       onBulkUpdate(status);
     }
