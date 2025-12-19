@@ -19,7 +19,7 @@ const LoanApplicationsAdmin = () => {
     try {
       setLoading(true);
       const token = await firebaseUser.getIdToken();
-      let url = "http://localhost:5000/loan-applications";
+      let url = "https://lonify-server-side.onrender.com//loan-applications";
       if (status !== "All") url += `?status=${status}`;
 
       const res = await axios.get(url, {
@@ -68,9 +68,13 @@ const LoanApplicationsAdmin = () => {
           } else {
             throw new Error("Invalid action");
           }
-          return axios.patch(`http://localhost:5000${endpoint}`, null, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          return axios.patch(
+            `https://lonify-server-side.onrender.com/${endpoint}`,
+            null,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
         })
       );
       Swal.fire("Success", "Applications updated", "success");
@@ -147,7 +151,7 @@ const LoanApplicationsAdmin = () => {
         </tbody>
       </table>
     </div>
-  );//Nur
+  ); //Nur
 };
 
 export default LoanApplicationsAdmin;

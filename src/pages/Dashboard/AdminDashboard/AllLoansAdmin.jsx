@@ -17,9 +17,12 @@ const AllLoansAdmin = () => {
     try {
       setLoading(true);
       const token = await firebaseUser.getIdToken();
-      const response = await axios.get("http://localhost:5000/loans", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://lonify-server-side.onrender.com//loans",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setLoans(response.data);
     } catch (error) {
       console.error("Error fetching loans:", error);
@@ -38,7 +41,7 @@ const AllLoansAdmin = () => {
     try {
       const token = await firebaseUser.getIdToken();
       const response = await axios.patch(
-        `http://localhost:5000/loans/${loan._id}/show`,
+        `https://lonify-server-side.onrender.com//loans/${loan._id}/show`,
         { showOnHome: !loan.showOnHome },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -63,9 +66,12 @@ const AllLoansAdmin = () => {
 
     try {
       const token = await firebaseUser.getIdToken();
-      await axios.delete(`http://localhost:5000/loans/${loanId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://lonify-server-side.onrender.com//loans/${loanId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setLoans(loans.filter((l) => l._id !== loanId));
       toast.success(`Loan "${loanTitle}" deleted successfully.`);
     } catch (error) {
@@ -82,11 +88,19 @@ const AllLoansAdmin = () => {
         `<input id="swal-title" class="swal2-input" placeholder="Title" value="${loan.title}">` +
         `<input id="swal-category" class="swal2-input" placeholder="Category" value="${loan.category}">` +
         `<input id="swal-interest" type="number" class="swal2-input" placeholder="Interest Rate" value="${loan.interestRate}">` +
-        `<input id="swal-minLimit" type="number" class="swal2-input" placeholder="Min Limit" value="${loan.minLimit || ""}">` +
-        `<input id="swal-maxLimit" type="number" class="swal2-input" placeholder="Max Limit" value="${loan.maxLimit || ""}">` +
-        `<textarea id="swal-description" class="swal2-textarea" placeholder="Description">${loan.description || ""}</textarea>` +
+        `<input id="swal-minLimit" type="number" class="swal2-input" placeholder="Min Limit" value="${
+          loan.minLimit || ""
+        }">` +
+        `<input id="swal-maxLimit" type="number" class="swal2-input" placeholder="Max Limit" value="${
+          loan.maxLimit || ""
+        }">` +
+        `<textarea id="swal-description" class="swal2-textarea" placeholder="Description">${
+          loan.description || ""
+        }</textarea>` +
         `<div style="display:flex; align-items:center; margin-top:10px; gap:5px;">` +
-        `<input id="swal-showOnHome" type="checkbox" ${loan.showOnHome ? "checked" : ""} />` +
+        `<input id="swal-showOnHome" type="checkbox" ${
+          loan.showOnHome ? "checked" : ""
+        } />` +
         `<label for="swal-showOnHome">Show on Home</label>` +
         `</div>`,
       focusConfirm: false,
@@ -95,7 +109,9 @@ const AllLoansAdmin = () => {
         return {
           title: document.getElementById("swal-title").value,
           category: document.getElementById("swal-category").value,
-          interestRate: parseFloat(document.getElementById("swal-interest").value),
+          interestRate: parseFloat(
+            document.getElementById("swal-interest").value
+          ),
           minLimit: parseFloat(document.getElementById("swal-minLimit").value),
           maxLimit: parseFloat(document.getElementById("swal-maxLimit").value),
           description: document.getElementById("swal-description").value,
@@ -108,7 +124,7 @@ const AllLoansAdmin = () => {
       try {
         const token = await firebaseUser.getIdToken();
         const res = await axios.patch(
-          `http://localhost:5000/loans/${loan._id}`,
+          `https://lonify-server-side.onrender.com//loans/${loan._id}`,
           formValues,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -132,18 +148,32 @@ const AllLoansAdmin = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-black">All Loan Products (Admin)</h1>
+      <h1 className="text-2xl font-bold mb-6 text-black">
+        All Loan Products (Admin)
+      </h1>
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">Image</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">Interest</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">Created By</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Show on Home</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">
+                Image
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">
+                Title
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">
+                Interest
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase">
+                Created By
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Show on Home
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">

@@ -11,8 +11,8 @@ import useAuth from "../../../hooks/useAuth";
 const InputReadOnly = ({ label, value }) => (
   <div>
        {" "}
-    <label className="block text-sm font-medium text-gray-500">{label}</label>
-       {" "}
+    <label className="block text-sm font-medium text-gray-500">{label}</label> 
+     {" "}
     <input
       value={value}
       readOnly
@@ -130,7 +130,7 @@ const LoanApplicationForm = () => {
     try {
       // 🔑 FIX 3: Send the token in the Authorization header
       const response = await axios.post(
-        "http://localhost:5000/loan-applications", // UPDATE THIS TO YOUR DEPLOYED URL!
+        "https://lonify-server-side.onrender.com//loan-applications", // UPDATE THIS TO YOUR DEPLOYED URL!
         loanApplication,
         {
           headers: {
@@ -204,10 +204,10 @@ const LoanApplicationForm = () => {
           </h3>
                    {" "}
           <div className="grid sm:grid-cols-3 gap-4 bg-indigo-50/50 p-4 rounded-lg border border-indigo-200">
-                        <InputReadOnly label="User Email" value={user.email} />
-                       {" "}
-            <InputReadOnly label="Loan Title" value={selectedLoan.title} />
-                       {" "}
+                        <InputReadOnly label="User Email" value={user.email} /> 
+                     {" "}
+            <InputReadOnly label="Loan Title" value={selectedLoan.title} />     
+                 {" "}
             <InputReadOnly
               label="Interest Rate (%)"
               value={selectedLoan.interestRate}

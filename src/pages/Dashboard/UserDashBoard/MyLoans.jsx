@@ -27,7 +27,7 @@ const MyLoans = () => {
           const token = await firebaseUser.getIdToken();
 
           const response = await axios.get(
-            `http://localhost:5000/loan-applications/my-applications`,
+            `https://lonify-server-side.onrender.com//loan-applications/my-applications`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ const MyLoans = () => {
     if (confirmation) {
       try {
         await axios.put(
-          `http://localhost:5000/api/loan-applications/${applicationId}/status`,
+          `https://lonify-server-side.onrender.com//api/loan-applications/${applicationId}/status`,
           { status: "Canceled" }
         );
 
@@ -79,7 +79,7 @@ const MyLoans = () => {
   const handlePay = async (applicationId) => {
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/create-payment-session",
+        "https://lonify-server-side.onrender.com//api/create-payment-session",
         {
           loanApplicationId: applicationId,
           amount: 1000, // $10.00 in cents

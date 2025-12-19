@@ -28,7 +28,7 @@ const ManageUsers = () => {
       setLoading(true);
       const token = await firebaseUser.getIdToken();
       const response = await axios.get(
-        `http://localhost:5000/users?page=${pageNumber}`,
+        `https://lonify-server-side.onrender.com//users?page=${pageNumber}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,7 +61,7 @@ const ManageUsers = () => {
     try {
       const token = await firebaseUser.getIdToken();
       await axios.patch(
-        `http://localhost:5000/users/${email}/role`,
+        `https://lonify-server-side.onrender.com//users/${email}/role`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -96,7 +96,7 @@ const ManageUsers = () => {
     try {
       const token = await firebaseUser.getIdToken();
       await axios.patch(
-        `http://localhost:5000/users/${user.email}/suspend`,
+        `https://lonify-server-side.onrender.com//users/${user.email}/suspend`,
         { reason: "" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -56,9 +56,12 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserRole = async (email) => {
     try {
-      const res = await axios.get(`http://localhost:5000/users/${email}/role`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `https://lonify-server-side.onrender.com//users/${email}/role`,
+        {
+          withCredentials: true,
+        }
+      );
       return res.data.role || "borrower";
     } catch (err) {
       console.error("Failed to fetch role:", err);

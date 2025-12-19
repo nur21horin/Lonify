@@ -36,7 +36,7 @@ const AddLoan = () => {
         try {
             // Note: The backend requires the Firebase ID token in the header
             // Axios interceptors or local context should handle adding the token
-            await axios.post('http://localhost:5000/loans', loanData, {
+            await axios.post('https://lonify-server-side.onrender.com//loans', loanData, {
                 // headers: { Authorization: `Bearer ${firebaseToken}` } 
             });
             

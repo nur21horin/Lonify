@@ -22,7 +22,7 @@ const PendingLoans = () => {
       const token = await firebaseUser.getIdToken();
 
       const response = await axios.get(
-        `http://localhost:5000/loan-applications?status=pending`,
+        `https://lonify-server-side.onrender.com//loan-applications?status=pending`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const PendingLoans = () => {
         const token = await firebaseUser.getIdToken();
         const endpoint = `/loan-applications/${applicationId}/${action}`;
         await axios.patch(
-          `http://localhost:5000${endpoint}`,
+          `https://lonify-server-side.onrender.com/${endpoint}`,
           {},
           {
             headers: {

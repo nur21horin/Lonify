@@ -28,7 +28,8 @@ export default function AllLoans() {
   const totalPages = Math.ceil(filteredLoans.length / loansPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const nextPage = () =>
+    currentPage < totalPages && setCurrentPage(currentPage + 1);
   const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
 
   useEffect(() => {
@@ -41,11 +42,14 @@ export default function AllLoans() {
         }
         const token = await auth.currentUser.getIdToken();
 
-        const res = await fetch("http://localhost:5000/loans", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          "https://lonify-server-side.onrender.com//loans",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!res.ok) throw new Error("Failed to fetch loans");
         const data = await res.json();
@@ -60,9 +64,7 @@ export default function AllLoans() {
   }, []);
 
   if (loading) {
-    return (
-      <p className="text-center py-20">Loading loans...</p>
-    );
+    return <p className="text-center py-20">Loading loans...</p>;
   }
 
   return (
@@ -101,7 +103,9 @@ export default function AllLoans() {
               className="border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               {categories.map((category) => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
           </div>
@@ -135,7 +139,8 @@ export default function AllLoans() {
                   </p>
                   <div className="flex justify-between mt-4 text-gray-800 text-sm font-semibold border-t pt-2">
                     <span className="flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4 text-blue-600" /> {loan.interestRate} interest
+                      <TrendingUp className="w-4 h-4 text-blue-600" />{" "}
+                      {loan.interestRate} interest
                     </span>
                     <span>{loan.maxLimit} max</span>
                   </div>
@@ -150,7 +155,9 @@ export default function AllLoans() {
             ))
           ) : (
             <div className="col-span-full text-center py-20">
-              <p className="text-gray-600">No loans found matching your criteria.</p>
+              <p className="text-gray-600">
+                No loans found matching your criteria.
+              </p>
               <button
                 onClick={() => {
                   setSearchTerm("");

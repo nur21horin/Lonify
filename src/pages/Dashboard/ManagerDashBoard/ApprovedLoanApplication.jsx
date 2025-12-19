@@ -18,7 +18,7 @@ const ApprovedLoans = () => {
       setLoading(true);
       const token = await firebaseUser.getIdToken();
       const res = await axios.get(
-        "http://localhost:5000/loan-applications?status=approved",
+        "https://lonify-server-side.onrender.com//loan-applications?status=approved",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

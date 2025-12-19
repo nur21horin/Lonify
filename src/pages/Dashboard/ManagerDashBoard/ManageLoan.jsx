@@ -19,9 +19,12 @@ const ManageLoans = () => {
       setLoading(true);
       try {
         const token = await firebaseUser.getIdToken();
-        const res = await axios.get("http://localhost:5000/loans", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          "https://lonify-server-side.onrender.com//loans",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setLoans(res.data);
       } catch (err) {
         console.error(err);
@@ -47,9 +50,12 @@ const ManageLoans = () => {
     if (confirm.isConfirmed) {
       try {
         const token = await firebaseUser.getIdToken();
-        await axios.delete(`http://localhost:5000/loans/${loanId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(
+          `https://lonify-server-side.onrender.com//loans/${loanId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setLoans((prev) => prev.filter((loan) => loan._id !== loanId));
         Swal.fire("Deleted!", "Loan has been deleted.", "success");
       } catch (err) {
@@ -61,50 +67,64 @@ const ManageLoans = () => {
 
   // Update loan via SweetAlert modal
   const handleUpdate = async (loan) => {
-  const { value: formValues } = await Swal.fire({
-    title: "Update Loan",
-    html:
-      `<input id="swal-title" class="swal2-input" placeholder="Title" value="${loan.title}">` +
-      `<input id="swal-category" class="swal2-input" placeholder="Category" value="${loan.category}">` +
-      `<input id="swal-interest" type="number" class="swal2-input" placeholder="Interest Rate" value="${loan.interestRate}">` +
-      `<input id="swal-minLimit" type="number" class="swal2-input" placeholder="Min Limit" value="${loan.minLimit || ''}">` +
-      `<input id="swal-maxLimit" type="number" class="swal2-input" placeholder="Max Limit" value="${loan.maxLimit || ''}">` +
-      `<textarea id="swal-description" class="swal2-textarea" placeholder="Description">${loan.description || ''}</textarea>` +
-      `<div style="display:flex; align-items:center; margin-top:10px; gap:5px;">` +
-      `<input id="swal-showOnHome" type="checkbox" ${loan.showOnHome ? "checked" : ""} />` +
-      `<label for="swal-showOnHome">Show on Home</label>` +
-      `</div>`,
-    focusConfirm: false,
-    showCancelButton: true,
-    preConfirm: () => {
-      return {
-        title: document.getElementById("swal-title").value,
-        category: document.getElementById("swal-category").value,
-        interestRate: parseFloat(document.getElementById("swal-interest").value),
-        minLimit: parseFloat(document.getElementById("swal-minLimit").value),
-        maxLimit: parseFloat(document.getElementById("swal-maxLimit").value),
-        description: document.getElementById("swal-description").value,
-        showOnHome: document.getElementById("swal-showOnHome").checked,
-      };
-    },
-  });
+    const { value: formValues } = await Swal.fire({
+      title: "Update Loan",
+      html:
+        `<input id="swal-title" class="swal2-input" placeholder="Title" value="${loan.title}">` +
+        `<input id="swal-category" class="swal2-input" placeholder="Category" value="${loan.category}">` +
+        `<input id="swal-interest" type="number" class="swal2-input" placeholder="Interest Rate" value="${loan.interestRate}">` +
+        `<input id="swal-minLimit" type="number" class="swal2-input" placeholder="Min Limit" value="${
+          loan.minLimit || ""
+        }">` +
+        `<input id="swal-maxLimit" type="number" class="swal2-input" placeholder="Max Limit" value="${
+          loan.maxLimit || ""
+        }">` +
+        `<textarea id="swal-description" class="swal2-textarea" placeholder="Description">${
+          loan.description || ""
+        }</textarea>` +
+        `<div style="display:flex; align-items:center; margin-top:10px; gap:5px;">` +
+        `<input id="swal-showOnHome" type="checkbox" ${
+          loan.showOnHome ? "checked" : ""
+        } />` +
+        `<label for="swal-showOnHome">Show on Home</label>` +
+        `</div>`,
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        return {
+          title: document.getElementById("swal-title").value,
+          category: document.getElementById("swal-category").value,
+          interestRate: parseFloat(
+            document.getElementById("swal-interest").value
+          ),
+          minLimit: parseFloat(document.getElementById("swal-minLimit").value),
+          maxLimit: parseFloat(document.getElementById("swal-maxLimit").value),
+          description: document.getElementById("swal-description").value,
+          showOnHome: document.getElementById("swal-showOnHome").checked,
+        };
+      },
+    });
 
-  if (formValues) {
-    try {
-      const token = await firebaseUser.getIdToken();
-      await axios.patch(`http://localhost:5000/loans/${loan._id}`, formValues, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLoans((prev) =>
-        prev.map((l) => (l._id === loan._id ? { ...l, ...formValues } : l))
-      );
-      toast.success("Loan updated successfully");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to update loan");
+    if (formValues) {
+      try {
+        const token = await firebaseUser.getIdToken();
+        await axios.patch(
+          `https://lonify-server-side.onrender.com//loans/${loan._id}`,
+          formValues,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setLoans((prev) =>
+          prev.map((l) => (l._id === loan._id ? { ...l, ...formValues } : l))
+        );
+        toast.success("Loan updated successfully");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update loan");
+      }
     }
-  }
-};
+  };
 
   // Filter loans
   const filteredLoans = loans.filter(
@@ -165,11 +185,7 @@ const ManageLoans = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <p>Interest Rate: {loan.interestRate}%</p>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={loan.showOnHome}
-                    readOnly
-                  />
+                  <input type="checkbox" checked={loan.showOnHome} readOnly />
                   <span>Show on Home</span>
                 </div>
               </div>

@@ -47,11 +47,15 @@ const AddLoan = () => {
     try {
       const token = await firebaseUser.getIdToken();
 
-      await axios.post("http://localhost:5000/loans", loanData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        "https://lonify-server-side.onrender.com//loans",
+        loanData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success("New Loan Product Added Successfully!");
       reset();
@@ -247,7 +251,9 @@ const AddLoan = () => {
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
             />
             {errors.image && (
-              <p className="text-red-500 text-xs mt-1">{errors.image.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.image.message}
+              </p>
             )}
           </div>
 

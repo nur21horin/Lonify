@@ -36,7 +36,7 @@ const loanDetailsLoader = async ({ params }) => {
 
   const token = await auth.currentUser.getIdToken();
 
-  const res = await fetch(`http://localhost:5000/loans/${params.id}`, {
+  const res = await fetch(`https://lonify-server-side.onrender.com/loans/${params.id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
