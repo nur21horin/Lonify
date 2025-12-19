@@ -10,16 +10,23 @@ import {
 } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 
+
 const LoanDetails = () => {
   const loan = useLoaderData();
   const navigate = useNavigate();
-  const { user, role } = useAuth(); // role = "user" | "admin" | "manager"
+  const { user, role } = useAuth();
 
   const isApplyDisabled = !user || role === "admin" || role === "manager";
 
+  const emiPlans = loan?.availableEmiPlans || [];
+  const requirements = loan?.requiredDocuments
+    ? loan.requiredDocuments.split(",").map((d) => d.trim())
+    : [];
+  const benefits = loan?.benefits || [];
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
-      {/* Back Button */}
+     
       <div className="max-w-5xl mx-auto mb-6">
         <Link
           to="/loans"
@@ -30,7 +37,7 @@ const LoanDetails = () => {
         </Link>
       </div>
 
-      {/* Main Card */}
+  
       <div className="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
         <div className="grid md:grid-cols-2 gap-10">
           {/* Image */}
@@ -46,7 +53,6 @@ const LoanDetails = () => {
             />
           </motion.div>
 
-          {/* Loan Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -63,7 +69,6 @@ const LoanDetails = () => {
 
             <p className="text-gray-600 mt-4">{loan.longDescription}</p>
 
-            {/* Stats */}
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="bg-gray-50 p-4 rounded-xl text-center shadow-sm">
                 <TrendingUp className="mx-auto text-blue-600 h-6 w-6" />
@@ -90,11 +95,13 @@ const LoanDetails = () => {
               </div>
             </div>
 
-            {/* Apply Button */}
+           
             <div className="mt-8">
               <button
                 disabled={isApplyDisabled}
-                onClick={() => navigate(`/dashboard/apply-loan/${loan.id}`)}
+                onClick={() =>
+                  navigate(`/dashboard/apply-loan/${loan._id}`)
+                }
                 className={`w-full py-3 rounded-xl font-semibold shadow-md flex items-center justify-center gap-2 transition
                 ${
                   isApplyDisabled
@@ -114,35 +121,30 @@ const LoanDetails = () => {
           </motion.div>
         </div>
 
-        {/* Additional Info Sections */}
         <div className="grid md:grid-cols-3 gap-6 mt-12">
-          {/* EMI Plans */}
+     
           <div className="bg-gray-50 rounded-xl p-6 shadow">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Calendar className="h-5 w-5 text-blue-600" />{" "}
-              <h2 className=" text-blue-900"> EMI Plans</h2>
+              <Calendar className="h-5 w-5 text-blue-600" />
+              <span className="text-blue-900">EMI Plans</span>
             </h3>
             <ul className="mt-4 space-y-2">
-              {loan.emiPlans.map((plan) => (
-                <li
-                  key={plan}
-                  className="flex items-center gap-2 text-gray-700"
-                >
+              {emiPlans.map((plan) => (
+                <li key={plan} className="flex items-center gap-2 text-gray-700">
                   <CheckCircle className="text-green-500 h-4 w-4" />
-                  {plan}
+                  {plan} months
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Requirements */}
           <div className="bg-gray-50 rounded-xl p-6 shadow">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Shield className="h-5 w-5 text-blue-600" />{" "}
-              <h2 className=" text-blue-900"> Requirements</h2>
+              <Shield className="h-5 w-5 text-blue-600" />
+              <span className="text-blue-900">Requirements</span>
             </h3>
             <ul className="mt-4 space-y-2">
-              {loan.requirements.map((req) => (
+              {requirements.map((req) => (
                 <li key={req} className="flex items-center gap-2 text-gray-700">
                   <CheckCircle className="text-green-500 h-4 w-4" />
                   {req}
@@ -151,14 +153,13 @@ const LoanDetails = () => {
             </ul>
           </div>
 
-          {/* Benefits */}
           <div className="bg-gray-50 rounded-xl p-6 shadow">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Shield className="h-5 w-5 text-blue-600" />{" "}
-              <span className=" text-blue-900">Benefits</span>
+              <Shield className="h-5 w-5 text-blue-600" />
+              <span className="text-blue-900">Benefits</span>
             </h3>
             <ul className="mt-4 space-y-2">
-              {loan.benefits.map((b) => (
+              {benefits.map((b) => (
                 <li key={b} className="flex items-center gap-2 text-gray-700">
                   <CheckCircle className="text-green-500 h-4 w-4" />
                   {b}

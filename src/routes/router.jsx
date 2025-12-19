@@ -63,7 +63,7 @@ export const router = createBrowserRouter([
             <AllLoans />
           </PrivateRoute>
         ),
-        loader: allLoanLoader, // ensure loader returns the array
+        
       },
       {
         path: "featureLoans",
@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
             <FeatureLoans></FeatureLoans>
           </PrivateRoute>
         ),
-        loader: allLoanLoader,
+       // loader: allLoanLoader,
       },
       {
         path: "loans/:id",
