@@ -6,7 +6,7 @@ import Register from "../pages/Auth/Register/Register";
 import PrivateRoute from "../layout/PrivateLayout";
 import AllLoans from "../pages/AllLoans/AllLoans";
 import LoanDetails from "../pages/LoanDetails/LoanDetails";
-import loanData from "../Api/LoanDetails.json";
+
 import DashboardLayout from "../pages/Dashboard/DashboardLayout";
 import ErrorPage from "../pages/ErrorPage";
 import Profile from "../pages/Dashboard/Profile";
@@ -25,17 +25,29 @@ import LoanPayment from "../pages/Dashboard/UserDashBoard/LoanPayemnt";
 import FeatureLoans from "../pages/AllLoans/FeatureLoans";
 import RoleRoute from "../Context/RoleRoute";
 import PendingLoans from "../pages/Dashboard/ManagerDashBoard/PendingLoan";
+import { getAuth } from "firebase/auth";
 
-// Loader for all loans
-const allLoanLoader = async () => {
-  return loanData; // array from JSON
-};
 
-// Loader for specific loan details
 const loanDetailsLoader = async ({ params }) => {
-  const loan = loanData.find((l) => l.id === params.id);
-  if (!loan) throw new Response("Loan not found", { status: 404 });
-  return loan;
+  const auth = getAuth();
+
+  if (!auth.currentUser) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
+  const token = await auth.currentUser.getIdToken();
+
+  const res = await fetch(`http://localhost:5000/loans/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Response("Loan not found", { status: res.status });
+  }
+
+  return res.json();
 };
 
 export const router = createBrowserRouter([
@@ -122,9 +134,14 @@ export const router = createBrowserRouter([
                 <ManageLoans />
               </RoleRoute>
             ),
-          },{
-            path:"pending-loans",
-            element:<RoleRoute allowedRoles={["manager"]}><PendingLoans></PendingLoans></RoleRoute>
+          },
+          {
+            path: "pending-loans",
+            element: (
+              <RoleRoute allowedRoles={["manager"]}>
+                <PendingLoans></PendingLoans>
+              </RoleRoute>
+            ),
           },
           {
             path: "updateLoan/:id",

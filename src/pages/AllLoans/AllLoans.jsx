@@ -24,6 +24,11 @@ export default function AllLoans() {
     const fetchLoans = async () => {
       try {
         const auth = getAuth();
+        if (!auth.currentUser) {
+          console.error("User not authenticated");
+          setLoading(false);
+          return;
+        }
         const token = await auth.currentUser.getIdToken();
 
         const res = await fetch("http://localhost:5000/loans", {
@@ -31,6 +36,10 @@ export default function AllLoans() {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch loans");
+        }
 
         const data = await res.json();
         setLoanData(data);
@@ -92,7 +101,7 @@ export default function AllLoans() {
           {filteredLoans.length > 0 ? (
             filteredLoans.map((loan) => (
               <div
-                key={loan.id}
+                key={loan._id}
                 className="group border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition"
               >
                 <div className="relative">
@@ -120,7 +129,7 @@ export default function AllLoans() {
                     <span>{loan.maxLimit} max</span>
                   </div>
                   <Link
-                    to={`/loans/${loan.id}`}
+                    to={`/loans/${loan._id}`}
                     className="mt-4 inline-flex items-center justify-center w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
                   >
                     View Details <ArrowRight className="ml-2 w-4 h-4" />
