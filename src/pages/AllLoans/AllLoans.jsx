@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Search, Filter, TrendingUp, ArrowRight } from "lucide-react";
 import { getAuth } from "firebase/auth";
 
@@ -8,6 +8,8 @@ export default function AllLoans() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const loansPerPage = 6;
 
   const categories = ["All", ...new Set(loanData.map((loan) => loan.category))];
 
@@ -20,12 +22,20 @@ export default function AllLoans() {
     return matchesSearch && matchesCategory;
   });
 
+  const indexOfLastLoan = currentPage * loansPerPage;
+  const indexOfFirstLoan = indexOfLastLoan - loansPerPage;
+  const currentLoans = filteredLoans.slice(indexOfFirstLoan, indexOfLastLoan);
+  const totalPages = Math.ceil(filteredLoans.length / loansPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+
   useEffect(() => {
     const fetchLoans = async () => {
       try {
         const auth = getAuth();
         if (!auth.currentUser) {
-          console.error("User not authenticated");
           setLoading(false);
           return;
         }
@@ -37,24 +47,22 @@ export default function AllLoans() {
           },
         });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch loans");
-        }
-
+        if (!res.ok) throw new Error("Failed to fetch loans");
         const data = await res.json();
         setLoanData(data);
       } catch (error) {
-        console.error("Failed to fetch loans:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchLoans();
   }, []);
 
   if (loading) {
-    return <p className="text-center py-20">Loading loans...</p>;
+    return (
+      <p className="text-center py-20">Loading loans...</p>
+    );
   }
 
   return (
@@ -74,7 +82,10 @@ export default function AllLoans() {
               type="text"
               placeholder="Search loans..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
               className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             />
           </div>
@@ -83,13 +94,14 @@ export default function AllLoans() {
             <Filter className="w-5 h-5 text-gray-400" />
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
+                <option key={category} value={category}>{category}</option>
               ))}
             </select>
           </div>
@@ -98,8 +110,8 @@ export default function AllLoans() {
 
       <section className="py-12">
         <div className="container mx-auto px-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredLoans.length > 0 ? (
-            filteredLoans.map((loan) => (
+          {currentLoans.length > 0 ? (
+            currentLoans.map((loan) => (
               <div
                 key={loan._id}
                 className="group border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition"
@@ -123,8 +135,7 @@ export default function AllLoans() {
                   </p>
                   <div className="flex justify-between mt-4 text-gray-800 text-sm font-semibold border-t pt-2">
                     <span className="flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4 text-blue-600" />{" "}
-                      {loan.interestRate} interest
+                      <TrendingUp className="w-4 h-4 text-blue-600" /> {loan.interestRate} interest
                     </span>
                     <span>{loan.maxLimit} max</span>
                   </div>
@@ -139,9 +150,7 @@ export default function AllLoans() {
             ))
           ) : (
             <div className="col-span-full text-center py-20">
-              <p className="text-gray-600">
-                No loans found matching your criteria.
-              </p>
+              <p className="text-gray-600">No loans found matching your criteria.</p>
               <button
                 onClick={() => {
                   setSearchTerm("");
@@ -154,6 +163,28 @@ export default function AllLoans() {
             </div>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-10 gap-4">
+            <button
+              onClick={prevPage}
+              className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-pink-500 to-blue-500 hover:opacity-90 transition"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="px-4 py-2 rounded-lg border text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={nextPage}
+              className="px-4 py-2 rounded-lg text-white bg-gradient-to-r from-pink-500 to-blue-500 hover:opacity-90 transition"
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
