@@ -10,9 +10,25 @@
     "maxLimit": "$50,000",
     "minLimit": "$1,000",
     "tenure": "12 - 60 months",
-    "emiPlans": ["12 months", "24 months", "36 months", "48 months", "60 months"],
-    "requirements": ["Valid ID", "Proof of Income", "Bank Statements", "Address Proof"],
-    "benefits": ["No collateral required", "Quick approval", "Flexible EMI options", "No hidden charges"]
+    "emiPlans": [
+      "12 months",
+      "24 months",
+      "36 months",
+      "48 months",
+      "60 months"
+    ],
+    "requirements": [
+      "Valid ID",
+      "Proof of Income",
+      "Bank Statements",
+      "Address Proof"
+    ],
+    "benefits": [
+      "No collateral required",
+      "Quick approval",
+      "Flexible EMI options",
+      "No hidden charges"
+    ]
   },
   {
     "id": "2",
@@ -25,9 +41,26 @@
     "maxLimit": "$500,000",
     "minLimit": "$50,000",
     "tenure": "5 - 30 years",
-    "emiPlans": ["5 years", "10 years", "15 years", "20 years", "25 years", "30 years"],
-    "requirements": ["Valid ID", "Proof of Income", "Property Documents", "Bank Statements"],
-    "benefits": ["Low interest rates", "Long tenure options", "Tax benefits", "Top-up loan facility"]
+    "emiPlans": [
+      "5 years",
+      "10 years",
+      "15 years",
+      "20 years",
+      "25 years",
+      "30 years"
+    ],
+    "requirements": [
+      "Valid ID",
+      "Proof of Income",
+      "Property Documents",
+      "Bank Statements"
+    ],
+    "benefits": [
+      "Low interest rates",
+      "Long tenure options",
+      "Tax benefits",
+      "Top-up loan facility"
+    ]
   },
   {
     "id": "3",
@@ -40,8 +73,124 @@
     "maxLimit": "$250,000",
     "minLimit": "$10,000",
     "tenure": "12 - 84 months",
-    "emiPlans": ["12 months", "24 months", "36 months", "48 months", "60 months", "84 months"],
-    "requirements": ["Business Registration", "Financial Statements", "Bank Statements", "Business Plan"],
-    "benefits": ["No collateral for small loans", "Quick disbursement", "Flexible repayment", "Business growth support"]
+    "emiPlans": [
+      "12 months",
+      "24 months",
+      "36 months",
+      "48 months",
+      "60 months",
+      "84 months"
+    ],
+    "requirements": [
+      "Business Registration",
+      "Financial Statements",
+      "Bank Statements",
+      "Business Plan"
+    ],
+    "benefits": [
+      "No collateral for small loans",
+      "Quick disbursement",
+      "Flexible repayment",
+      "Business growth support"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Travel Loan",
+    "description": "Finance your dream vacation",
+    "longDescription": "Plan your vacation without worries. Our travel loan covers flight tickets, accommodation, and other expenses with easy EMIs.",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop",
+    "category": "Travel",
+    "interestRate": "9.0%",
+    "maxLimit": "$20,000",
+    "minLimit": "$1,000",
+    "tenure": "6 - 36 months",
+    "emiPlans": [
+      "6 months",
+      "12 months",
+      "18 months",
+      "24 months",
+      "36 months"
+    ],
+    "requirements": ["Valid ID", "Travel Itinerary", "Bank Statements"],
+    "benefits": [
+      "Quick approval",
+      "Flexible EMI options",
+      "Covers travel expenses",
+      "No hidden fees"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Medical Loan",
+    "description": "Emergency medical financing",
+    "longDescription": "Get financial support for medical treatments, surgeries, or hospital bills with our fast and flexible medical loans.",
+    "image": "https://images.unsplash.com/photo-1588776814546-76c3c2e4f6f3?w=800&h=500&fit=crop",
+    "category": "Medical",
+    "interestRate": "7.5%",
+    "maxLimit": "$50,000",
+    "minLimit": "$2,000",
+    "tenure": "6 - 60 months",
+    "emiPlans": [
+      "6 months",
+      "12 months",
+      "24 months",
+      "36 months",
+      "48 months",
+      "60 months"
+    ],
+    "requirements": ["Medical Bill", "ID Proof", "Income Proof"],
+    "benefits": [
+      "Quick disbursement",
+      "Low interest",
+      "Flexible EMI options",
+      "Covers medical expenses"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Wedding Loan",
+    "description": "Make your special day perfect",
+    "longDescription": "Cover wedding expenses such as venue, catering, and photography with our wedding loans, designed for easy repayment and low interest.",
+    "image": "https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?w=800&h=500&fit=crop",
+    "category": "Wedding",
+    "interestRate": "8.8%",
+    "maxLimit": "$50,000",
+    "minLimit": "$2,000",
+    "tenure": "12 - 48 months",
+    "emiPlans": ["12 months", "24 months", "36 months", "48 months"],
+    "requirements": ["ID Proof", "Bank Statements", "Wedding Plan"],
+    "benefits": [
+      "Quick approval",
+      "Flexible EMI options",
+      "Covers wedding expenses",
+      "Low interest"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Agriculture Loan",
+    "description": "Support for your farm and crops",
+    "longDescription": "Our agriculture loan helps farmers invest in seeds, fertilizers, equipment, and other agricultural needs with flexible repayment options.",
+    "image": "https://images.unsplash.com/photo-1542317854-8919bdf2f5d6?w=800&h=500&fit=crop",
+    "category": "Agriculture",
+    "interestRate": "7.0%",
+    "maxLimit": "$100,000",
+    "minLimit": "$5,000",
+    "tenure": "12 - 60 months",
+    "emiPlans": [
+      "12 months",
+      "24 months",
+      "36 months",
+      "48 months",
+      "60 months"
+    ],
+    "requirements": ["Land documents", "ID Proof", "Bank Statements"],
+    "benefits": [
+      "Low interest",
+      "Flexible EMI options",
+      "Quick processing",
+      "Supports farm growth"
+    ]
   }
 ]

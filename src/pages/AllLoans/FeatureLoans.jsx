@@ -1,14 +1,23 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TrendingUp, ArrowRight } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
+import loanData from "../../Api/LoanDetails.json"; // local JSON
 
-const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
+const FeatureLoans = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [featuredLoans, setFeaturedLoans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Handle button click
+  useEffect(() => {
+    // get only first 6 loans
+    const data = loanData.slice(0, 6);
+    setFeaturedLoans(data);
+    setIsLoading(false);
+  }, []);
+
   const handleViewDetails = (loanId) => {
     if (!user) {
       navigate("/login");
@@ -17,25 +26,16 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
     }
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 10 },
-    },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 10 } },
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="py-10 text-center">
@@ -45,10 +45,7 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
     );
   }
 
-  // No data
-  if (!featuredLoans || featuredLoans.length === 0) {
-    return null;
-  }
+  if (!featuredLoans || featuredLoans.length === 0) return null;
 
   return (
     <section className="py-16 bg-gray-50">
@@ -61,7 +58,7 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
         </p>
 
         <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -77,14 +74,10 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
               }}
               className="bg-white border rounded-xl shadow-lg transition"
             >
-              {/* Image */}
               <div className="relative">
                 <img
-                  src={
-                    loan.image ||
-                    "https://via.placeholder.com/400x200?text=Loan+Image"
-                  }
-                  alt={loan.title}
+                  src={loan.image || "https://via.placeholder.com/400x200?text=Loan+Image"}
+                  alt={loan.title || "Loan"}
                   className="w-full h-40 object-cover rounded-t-xl"
                 />
                 <span className="absolute top-3 left-3 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">
@@ -92,15 +85,9 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
                 </span>
               </div>
 
-              {/* Content */}
               <div className="p-4">
-                <h3 className="text-xl font-bold text-gray-900 line-clamp-1">
-                  {loan.title}
-                </h3>
-
-                <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                  {loan.description}
-                </p>
+                <h3 className="text-xl font-bold text-gray-900 line-clamp-1">{loan.title}</h3>
+                <p className="text-gray-600 text-sm mt-2 line-clamp-2">{loan.description}</p>
 
                 <div className="flex justify-between mt-4 text-gray-800 text-sm font-semibold border-t pt-2">
                   <span className="flex items-center gap-1">
@@ -120,6 +107,15 @@ const FeatureLoans = ({ featuredLoans = [], isLoading = false }) => {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="text-center mt-10">
+          <Link
+            to="/loans"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            Show More
+          </Link>
+        </div>
       </div>
     </section>
   );

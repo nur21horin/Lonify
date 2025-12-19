@@ -27,7 +27,6 @@ import RoleRoute from "../Context/RoleRoute";
 import PendingLoans from "../pages/Dashboard/ManagerDashBoard/PendingLoan";
 import { getAuth } from "firebase/auth";
 
-
 const loanDetailsLoader = async ({ params }) => {
   const auth = getAuth();
 
@@ -50,6 +49,8 @@ const loanDetailsLoader = async ({ params }) => {
   return res.json();
 };
 
+
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -63,7 +64,6 @@ export const router = createBrowserRouter([
             <AllLoans />
           </PrivateRoute>
         ),
-        
       },
       {
         path: "featureLoans",
@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
             <FeatureLoans></FeatureLoans>
           </PrivateRoute>
         ),
-       // loader: allLoanLoader,
+        
       },
       {
         path: "loans/:id",
