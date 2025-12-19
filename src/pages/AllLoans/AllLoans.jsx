@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { Search, Filter, TrendingUp, ArrowRight } from "lucide-react";
+import { getAuth } from "firebase/auth";
 
 export default function AllLoans() {
-  const loanData = useLoaderData() || []; 
-
+  const [loanData, setLoanData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -18,6 +19,34 @@ export default function AllLoans() {
       selectedCategory === "All" || loan.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  useEffect(() => {
+    const fetchLoans = async () => {
+      try {
+        const auth = getAuth();
+        const token = await auth.currentUser.getIdToken();
+
+        const res = await fetch("http://localhost:5000/loans", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        setLoanData(data);
+      } catch (error) {
+        console.error("Failed to fetch loans:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLoans();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center py-20">Loading loans...</p>;
+  }
 
   return (
     <div className="bg-white min-h-screen">
