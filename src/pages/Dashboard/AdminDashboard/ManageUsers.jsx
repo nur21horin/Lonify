@@ -66,7 +66,6 @@ const ManageUsers = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // update
       setUsers(
         users.map((u) => (u.email === email ? { ...u, role: newRole } : u))
       );
@@ -79,39 +78,45 @@ const ManageUsers = () => {
   };
 
   const toggleSuspension = async (user) => {
-    const confirmResult = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: `${user.isSuspended ? "Unsuspend" : "Suspend"} User`,
-      text: `Are you sure you want to ${
-        user.isSuspended ? "unsuspend" : "suspend"
-      } ${user.name}?`,
-      icon: "warning",
+      input: user.isSuspended ? null : "text",
+      inputLabel: "Reason",
+      inputPlaceholder: "Enter reason for suspension",
       showCancelButton: true,
-      confirmButtonColor: user.isSuspended ? "#28a745" : "#dc3545",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: user.isSuspended ? "Yes, Unsuspend" : "Yes, Suspend",
+      confirmButtonText: user.isSuspended ? "Unsuspend" : "Suspend",
+      cancelButtonText: "Cancel",
+      preConfirm: (input) => {
+        if (!user.isSuspended && !input) {
+          Swal.showValidationMessage("Reason is required to suspend");
+        }
+        return input;
+      },
     });
 
-    if (!confirmResult.isConfirmed) return;
+    // If cancelled
+    if (reason === undefined && !user.isSuspended) return;
 
     try {
       const token = await firebaseUser.getIdToken();
       await axios.patch(
         `https://lonify-server-side.onrender.com/users/${user.email}/suspend`,
-        { reason: "" },
+        { reason: reason || "" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // toggle isSuspended
+      const newStatus = !user.isSuspended;
+
       setUsers(
         users.map((u) =>
-          u.email === user.email ? { ...u, isSuspended: !u.isSuspended } : u
+          u.email === user.email
+            ? { ...u, isSuspended: newStatus, suspendReason: reason || "" }
+            : u
         )
       );
 
       toast.success(
-        `User ${user.name} ${
-          !user.isSuspended ? "suspended" : "unsuspended"
-        } successfully`
+        `User ${user.name} ${newStatus ? "suspended" : "unsuspended"} successfully`
       );
     } catch (error) {
       console.error("Error toggling suspension:", error);
@@ -198,15 +203,9 @@ const ManageUsers = () => {
                   )}
                 </td>
                 <td className="px-6 py-4 text-sm text-black">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.isSuspended
-                        ? "bg-red-200 text-red-800"
-                        : "bg-green-100 text-green-800"
-                    }`}
-                  >
-                    {user.isSuspended ? "Suspended" : "Active"}
-                  </span>
+                  {user.isSuspended
+                    ? `Suspended: ${user.suspendReason || "No reason provided"}`
+                    : "Active"}
                 </td>
                 <td className="px-6 py-4 text-center text-sm font-medium">
                   <div className="flex justify-center gap-2">

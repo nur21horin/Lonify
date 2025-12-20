@@ -1,4 +1,4 @@
-// PendingLoans.jsx
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CheckCircle, XCircle, Eye, Loader2 } from "lucide-react";
