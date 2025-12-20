@@ -20,7 +20,7 @@ export default function DashboardLayout() {
           </NavLink>
 
           {/* Borrower */}
-          {user?.role === "borrower" && (
+          {user?.role === "borrower" ||user?.role === "user"  && (
             <>
               <NavLink to="/dashboard/my-loans" className={({ isActive }) => (isActive ? activeClass : inactiveClass)}>
                 My Loans
