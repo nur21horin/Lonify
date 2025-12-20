@@ -50,7 +50,7 @@ const HeroSection = () => {
             className="mt-8 flex flex-wrap gap-4"
           >
             <Link
-              to="/apply"
+              to="/loans"
               className="inline-flex items-center px-8 py-4 text-xl font-semibold bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors duration-300"
             >
               Apply for Loan
