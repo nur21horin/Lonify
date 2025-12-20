@@ -6,7 +6,7 @@ Lonify is a full-stack Loan Management System that allows users to explore loan 
 
 Backend API: https://lonify-server-side.onrender.com
 
-Frontend: (add deployed frontend link here)
+Frontend: [( frontend link here)](https://serene-flan-4c0dc4.netlify.app/)
 
 # Tech Stack
 
