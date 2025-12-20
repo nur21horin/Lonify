@@ -47,7 +47,6 @@ const CheckoutForm = ({ clientSecret, applicationId }) => {
             return;
         }
 
-        // 3. Confirm Payment
         const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
             clientSecret,
             {
@@ -64,12 +63,11 @@ const CheckoutForm = ({ clientSecret, applicationId }) => {
             return;
         }
 
-        // 4. Update Database (Payment Success)
         if (paymentIntent.status === 'succeeded') {
             const transactionId = paymentIntent.id;
 
             try {
-                // Endpoint: /loan-applications/:id/pay
+               
                 const res = await axiosSecure.patch(`/loan-applications/${applicationId}/pay`, {
                     transactionId,
                 });
@@ -81,7 +79,7 @@ const CheckoutForm = ({ clientSecret, applicationId }) => {
                         icon: "success",
                         confirmButtonText: "View Applications"
                     }).then(() => {
-                        // Navigate back to the loan applications list
+                        
                         navigate('/dashboard/my-loans'); 
                     });
                 } else {
