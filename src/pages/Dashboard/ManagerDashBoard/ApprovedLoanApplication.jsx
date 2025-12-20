@@ -1,4 +1,4 @@
-// ApprovedLoans.jsx
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Eye, Loader2 } from "lucide-react";
@@ -10,7 +10,7 @@ const ApprovedLoans = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch approved applications
+ 
   const fetchApprovedApplications = async () => {
     if (!firebaseUser) return;
 
@@ -35,7 +35,7 @@ const ApprovedLoans = () => {
     fetchApprovedApplications();
   }, [firebaseUser]);
 
-  // View loan details
+
   const handleViewDetails = (app) => {
     Swal.fire({
       title: "Approved Loan Details",
@@ -84,7 +84,7 @@ const ApprovedLoans = () => {
       </div>
     );
 
-  // inside your component
+  
   const handleExportCSV = () => {
     if (applications.length === 0) return;
 
@@ -99,7 +99,7 @@ const ApprovedLoans = () => {
     ];
 
     const csvRows = [
-      headers.join(","), // header row
+      headers.join(","), 
       ...applications.map((app) =>
         [
           app._id,
