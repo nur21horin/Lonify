@@ -1,4 +1,4 @@
-// src/pages/Dashboard/User/Profile.jsx
+
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,7 +12,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user info from Firestore
+ 
   useEffect(() => {
     const fetchUser = async () => {
       if (authUser) {
@@ -23,7 +23,7 @@ export default function Profile() {
           if (docSnap.exists()) {
             setUser({ ...authUser, ...docSnap.data() });
           } else {
-            setUser(authUser); // fallback
+            setUser(authUser);
           }
         } catch (error) {
           toast.error("Failed to load user data");
@@ -112,7 +112,7 @@ export default function Profile() {
         </button>
       </div>
 
-      {/* Optional Extra Info */}
+    
       <div className="mt-6 text-gray-700 dark:text-gray-300">
         <p>
           <strong>User ID:</strong> {user.uid}

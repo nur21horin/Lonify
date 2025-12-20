@@ -51,7 +51,7 @@ const UpdateLoan = () => {
 
     try {
       await axios.put(
-        `https://lonify-server-side.onrender.com/api/loans/${loanId}`,
+        `https://lonify-server-side.onrender.com/loans/${loanId}`,
         updatedLoanData
       );
 

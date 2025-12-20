@@ -11,7 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Example: take first 4 loans as featured
+    
     setFeaturedLoans(loanData.slice(0, 4));
     setLoading(false);
   }, []);

@@ -65,7 +65,7 @@ const ManageLoans = () => {
     }
   };
 
-  // Update loan via SweetAlert modal
+ 
   const handleUpdate = async (loan) => {
     const { value: formValues } = await Swal.fire({
       title: "Update Loan",
