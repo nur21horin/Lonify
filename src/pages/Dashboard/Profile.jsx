@@ -53,7 +53,7 @@ export default function Profile() {
   };
 
   const handleUpdate = () => {
-    toast.info("Profile update demo - implement your own logic");
+    toast.info("Profile update");
   };
 
   if (loading) {
