@@ -20,7 +20,6 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  // Password validation rules
   const passwordRules = {
     required: "Password is required",
     minLength: { value: 6, message: "Password must be at least 6 characters" },

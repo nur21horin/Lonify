@@ -1,4 +1,4 @@
-// AllLoansAdmin.jsx
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Trash2, Edit, Loader2, Home } from "lucide-react";
@@ -36,7 +36,6 @@ const AllLoansAdmin = () => {
     fetchAllLoans();
   }, [firebaseUser]);
 
-  // Toggle "Show on Home"
   const handleToggleHome = async (loan) => {
     try {
       const token = await firebaseUser.getIdToken();
@@ -57,7 +56,7 @@ const AllLoansAdmin = () => {
     }
   };
 
-  // Delete loan
+ 
   const handleDelete = async (loanId, loanTitle) => {
     const confirm = window.confirm(
       `WARNING: Deleting "${loanTitle}" will remove all associated applications. Proceed?`
@@ -80,7 +79,6 @@ const AllLoansAdmin = () => {
     }
   };
 
-  // Update loan using SweetAlert
   const handleUpdate = async (loan) => {
     const { value: formValues } = await Swal.fire({
       title: "Update Loan",
