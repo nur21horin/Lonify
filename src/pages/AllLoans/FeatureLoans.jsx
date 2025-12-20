@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TrendingUp, ArrowRight } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
-import loanData from "../../Api/LoanDetails.json"; // local JSON
+import loanData from "../../Api/LoanDetails.json"; 
 
 const FeatureLoans = () => {
   const { user } = useAuth();

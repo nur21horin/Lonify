@@ -75,7 +75,7 @@ const Login = () => {
             <p className="text-red-500 text-sm">Email is required</p>
           )}
 
-          {/* Password */}
+       
           <div>
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-gray-700">
@@ -106,7 +106,6 @@ const Login = () => {
                 </p>
               )}
 
-              {/* Toggle Password Button */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -117,7 +116,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
+          
           <button
             type="submit"
             className="w-full py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
@@ -127,7 +126,7 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Footer */}
+      
         <p className="text-center text-sm text-gray-600  mt-6">
           Don't have an account?
           <Link
