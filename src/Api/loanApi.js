@@ -1,25 +1,19 @@
 import axiosPublic from "./axiosPublic";
 import axiosSecure from "./axiosSecure";
 
-/* ---------------- PUBLIC ---------------- */
 
-// Home Featured Loans
+// Home  Loans
 export const getFeaturedLoans = async () => {
   const res = await axiosPublic.get("/public/loans");
   return res.data;
 };
 
-/* ---------------- AUTH ---------------- */
-
-// Create JWT cookie
 export const createJWT = async (user) => {
   const res = await axiosPublic.post("/jwt", user);
   return res.data;
 };
 
-/* ---------------- LOANS ---------------- */
 
-// All loans (logged in)
 export const getAllLoans = async () => {
   const res = await axiosSecure.get("/loans");
   return res.data;
@@ -31,7 +25,7 @@ export const getLoanDetails = async (id) => {
   return res.data;
 };
 
-/* ---------------- LOAN APPLICATION ---------------- */
+
 
 export const applyLoan = async (data) => {
   const res = await axiosSecure.post("/loan-applications", data);
@@ -45,14 +39,12 @@ export const payApplicationFee = async (id, transactionId) => {
   return res.data;
 };
 
-/* ---------------- USER ---------------- */
 
 export const getMyApplications = async () => {
   const res = await axiosSecure.get("/loan-applications");
   return res.data;
 };
 
-/* ---------------- MANAGER ---------------- */
 
 export const addLoan = async (loan) => {
   const res = await axiosSecure.post("/loans", loan);
@@ -79,7 +71,7 @@ export const rejectApplication = async (id) => {
   return res.data;
 };
 
-/* ---------------- ADMIN ---------------- */
+
 
 export const getUsers = async (page = 1) => {
   const res = await axiosSecure.get(`/users?page=${page}`);
