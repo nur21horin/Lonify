@@ -12,7 +12,7 @@ const useUserRole = () => {
     const fetchRole = async () => {
       try {
         const res = await axios.get(
-          `https://lonify-server-side.onrender.com//users/${user.email}/role`
+          `https://lonify-server-side.onrender.com/users/${user.email}/role`
         );
         setRole(res.data.role);
       } catch (error) {

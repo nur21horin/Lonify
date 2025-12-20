@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 
 const axiosSecure = axios.create({
-  baseURL: "https://lonify-server-side.onrender.com/",
+  baseURL: "https://lonify-server-side.onrender.com",
   withCredentials: true,
 });
 

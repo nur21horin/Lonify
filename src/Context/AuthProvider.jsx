@@ -57,7 +57,7 @@ const AuthProvider = ({ children }) => {
   const fetchUserRole = async (email) => {
     try {
       const res = await axios.get(
-        `https://lonify-server-side.onrender.com//users/${email}/role`,
+        `https://lonify-server-side.onrender.com/users/${email}/role`,
         {
           withCredentials: true,
         }

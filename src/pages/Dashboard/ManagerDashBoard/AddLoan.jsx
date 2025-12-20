@@ -48,7 +48,7 @@ const AddLoan = () => {
       const token = await firebaseUser.getIdToken();
 
       await axios.post(
-        "https://lonify-server-side.onrender.com//loans",
+        "https://lonify-server-side.onrender.com/loans",
         loanData,
         {
           headers: {

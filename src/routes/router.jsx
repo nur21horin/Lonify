@@ -36,11 +36,14 @@ const loanDetailsLoader = async ({ params }) => {
 
   const token = await auth.currentUser.getIdToken();
 
-  const res = await fetch(`https://lonify-server-side.onrender.com/loans/${params.id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const res = await fetch(
+    `https://lonify-server-side.onrender.com/loans/${params.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!res.ok) {
     throw new Response("Loan not found", { status: res.status });
@@ -48,8 +51,6 @@ const loanDetailsLoader = async ({ params }) => {
 
   return res.json();
 };
-
-
 
 export const router = createBrowserRouter([
   {
@@ -72,7 +73,6 @@ export const router = createBrowserRouter([
             <FeatureLoans></FeatureLoans>
           </PrivateRoute>
         ),
-        
       },
       {
         path: "loans/:id",

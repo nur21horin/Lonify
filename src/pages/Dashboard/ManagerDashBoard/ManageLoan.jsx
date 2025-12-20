@@ -20,7 +20,7 @@ const ManageLoans = () => {
       try {
         const token = await firebaseUser.getIdToken();
         const res = await axios.get(
-          "https://lonify-server-side.onrender.com//loans",
+          "https://lonify-server-side.onrender.com/loans",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -51,7 +51,7 @@ const ManageLoans = () => {
       try {
         const token = await firebaseUser.getIdToken();
         await axios.delete(
-          `https://lonify-server-side.onrender.com//loans/${loanId}`,
+          `https://lonify-server-side.onrender.com/loans/${loanId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -109,7 +109,7 @@ const ManageLoans = () => {
       try {
         const token = await firebaseUser.getIdToken();
         await axios.patch(
-          `https://lonify-server-side.onrender.com//loans/${loan._id}`,
+          `https://lonify-server-side.onrender.com/loans/${loan._id}`,
           formValues,
           {
             headers: { Authorization: `Bearer ${token}` },

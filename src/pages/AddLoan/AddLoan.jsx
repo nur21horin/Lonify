@@ -1,19 +1,18 @@
-// pages/Dashboard/ManagerDashBoard/AddLoan.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { PlusCircle, Loader2 } from 'lucide-react';
-// import { toast } from 'react-toastify'; 
+import { toast } from 'react-toastify'; 
 
 const AddLoan = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
     
-    // State to handle complex/dynamic inputs like Required Documents and EMI Plans
+
     const [requiredDocuments, setRequiredDocuments] = useState([]);
     const [emiPlans, setEmiPlans = useState([]);
 
-    // Handlers for dynamic lists
     const addDocument = (doc) => setRequiredDocuments([...requiredDocuments, doc]);
     const removeDocument = (index) => setRequiredDocuments(requiredDocuments.filter((_, i) => i !== index));
     const addEmiPlan = (plan) => setEmiPlans([...emiPlans, plan]);
@@ -25,22 +24,20 @@ const AddLoan = () => {
 
         const loanData = {
             ...data,
-            requiredDocuments, // Include dynamic lists
+            requiredDocuments, 
             emiPlans,
-            // Assuming image upload happens separately and returns a URL, 
-            // or is provided as a URL in the form. Using a placeholder here.
+           
             image: data.image || 'https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Loan+Product', 
-            showOnHome: data.showOnHome === 'true', // Convert string checkbox value to boolean
+            showOnHome: data.showOnHome === 'true', 
         };
 
         try {
-            // Note: The backend requires the Firebase ID token in the header
-            // Axios interceptors or local context should handle adding the token
-            await axios.post('https://lonify-server-side.onrender.com//loans', loanData, {
+           
+            await axios.post('https://lonify-server-side.onrender.com/loans', loanData, {
                 // headers: { Authorization: `Bearer ${firebaseToken}` } 
             });
             
-            // toast.success("Loan product added successfully!");
+             toast.success("Loan product added successfully!");
             reset();
             setRequiredDocuments([]);
             setEmiPlans([]);
@@ -60,7 +57,7 @@ const AddLoan = () => {
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
-                {/* Basic Details */}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Loan Title</label>
@@ -114,7 +111,7 @@ const AddLoan = () => {
                     {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
                 </div>
 
-                {/* Dynamic Inputs: Documents */}
+         
                 <DynamicList 
                     title="Required Documents"
                     list={requiredDocuments}
@@ -122,7 +119,7 @@ const AddLoan = () => {
                     onRemove={removeDocument}
                 />
                 
-                {/* Dynamic Inputs: EMI Plans */}
+                
                 <DynamicList 
                     title="Available EMI Plans (e.g., 12 months, 24 months)"
                     list={emiPlans}
@@ -166,7 +163,6 @@ const AddLoan = () => {
     );
 };
 
-// Reusable component for dynamic string lists (Documents, EMI Plans)
 const DynamicList = ({ title, list, onAdd, onRemove }) => {
     const [newItem, setNewItem] = useState('');
 

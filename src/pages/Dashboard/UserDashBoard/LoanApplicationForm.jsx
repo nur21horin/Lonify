@@ -130,7 +130,7 @@ const LoanApplicationForm = () => {
     try {
       // 🔑 FIX 3: Send the token in the Authorization header
       const response = await axios.post(
-        "https://lonify-server-side.onrender.com//loan-applications", // UPDATE THIS TO YOUR DEPLOYED URL!
+        "https://lonify-server-side.onrender.com/loan-applications", // UPDATE THIS TO YOUR DEPLOYED URL!
         loanApplication,
         {
           headers: {

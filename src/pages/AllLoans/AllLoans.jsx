@@ -43,7 +43,7 @@ export default function AllLoans() {
         const token = await auth.currentUser.getIdToken();
 
         const res = await fetch(
-          "https://lonify-server-side.onrender.com//loans",
+          "https://lonify-server-side.onrender.com/loans",
           {
             headers: {
               Authorization: `Bearer ${token}`,

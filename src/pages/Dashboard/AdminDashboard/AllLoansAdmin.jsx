@@ -18,7 +18,7 @@ const AllLoansAdmin = () => {
       setLoading(true);
       const token = await firebaseUser.getIdToken();
       const response = await axios.get(
-        "https://lonify-server-side.onrender.com//loans",
+        "https://lonify-server-side.onrender.com/loans",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -41,7 +41,7 @@ const AllLoansAdmin = () => {
     try {
       const token = await firebaseUser.getIdToken();
       const response = await axios.patch(
-        `https://lonify-server-side.onrender.com//loans/${loan._id}/show`,
+        `https://lonify-server-side.onrender.com/loans/${loan._id}/show`,
         { showOnHome: !loan.showOnHome },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -67,7 +67,7 @@ const AllLoansAdmin = () => {
     try {
       const token = await firebaseUser.getIdToken();
       await axios.delete(
-        `https://lonify-server-side.onrender.com//loans/${loanId}`,
+        `https://lonify-server-side.onrender.com/loans/${loanId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -124,7 +124,7 @@ const AllLoansAdmin = () => {
       try {
         const token = await firebaseUser.getIdToken();
         const res = await axios.patch(
-          `https://lonify-server-side.onrender.com//loans/${loan._id}`,
+          `https://lonify-server-side.onrender.com/loans/${loan._id}`,
           formValues,
           { headers: { Authorization: `Bearer ${token}` } }
         );
